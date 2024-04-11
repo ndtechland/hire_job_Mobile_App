@@ -48,12 +48,12 @@ class _InviteFriendState extends State<InviteFriend> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Sed totorn ante. \n this is vestibulum non crissu id. \n porta imperfect purus.',
+                'Send this app. \n this is the job search. \n  application for us.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black45, fontSize: 14),
+                style: TextStyle(color: Colors.black45, fontSize: 16),
               ),
               const SizedBox(height: 24),
-              Image.asset('assets/images/s2.jpg',
+              Image.asset('lib/assets/images/s2.jpg',
                   width: double.infinity, height: 250, fit: BoxFit.fitHeight),
               const SizedBox(height: 40),
               Container(

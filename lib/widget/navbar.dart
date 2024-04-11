@@ -4,6 +4,8 @@ import 'package:hirejobindia/modules/all_pages/pages/applied_jobs.dart';
 import 'package:hirejobindia/modules/all_pages/pages/bookmark.dart';
 import 'package:hirejobindia/modules/all_pages/pages/categories.dart';
 import 'package:hirejobindia/modules/all_pages/pages/company.dart';
+import 'package:hirejobindia/modules/all_pages/pages/invite_friend.dart';
+import 'package:hirejobindia/modules/all_pages/pages/notification.dart';
 import 'package:hirejobindia/modules/all_pages/pages/profile.dart';
 
 class NavBar extends StatelessWidget {
@@ -136,20 +138,20 @@ class NavBar extends StatelessWidget {
               leading: const Icon(Icons.inventory_outlined),
               title: const Text('Invite Friend'),
               onTap: () {
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => const InviteFriend()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const InviteFriend()));
               },
             ),
             ListTile(
               leading: const Icon(Icons.notifications),
               title: const Text('Notification'),
               onTap: () {
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => const NotificationScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const NotificationScreen()));
               },
             ),
             ListTile(

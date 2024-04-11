@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hirejobindia/components/styles.dart';
+import 'package:hirejobindia/modules/all_pages/pages/categories.dart';
+import 'package:hirejobindia/modules/all_pages/pages/company.dart';
+import 'package:hirejobindia/modules/all_pages/pages/filter.dart';
+import 'package:hirejobindia/modules/all_pages/pages/view_jobs.dart';
 import 'package:hirejobindia/widget/elevated_button.dart';
 import 'package:hirejobindia/widget/navbar.dart';
 
@@ -53,8 +57,8 @@ class _HomeState extends State<Home> {
           IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
           IconButton(
               onPressed: () {
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (context) => const Filter()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const Filter()));
               },
               icon: const Icon(Icons.filter_list)),
         ],
@@ -86,10 +90,10 @@ class _HomeState extends State<Home> {
                 blackHeadingSmall('All Category'.toUpperCase()),
                 GestureDetector(
                     onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const Categories()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Categories()));
                     },
                     child: appcolorText('See All'))
               ],
@@ -114,10 +118,10 @@ class _HomeState extends State<Home> {
                 blackHeadingSmall('Jobs'.toUpperCase()),
                 GestureDetector(
                     onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const ViewJobs()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ViewJobs()));
                     },
                     child: appcolorText('See All'))
               ],
@@ -142,10 +146,10 @@ class _HomeState extends State<Home> {
                 blackHeadingSmall('Companies'.toUpperCase()),
                 GestureDetector(
                     onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const Company()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Company()));
                     },
                     child: appcolorText('See All'))
               ],
@@ -170,10 +174,10 @@ class _HomeState extends State<Home> {
                 blackHeadingSmall('Featured jobs'.toUpperCase()),
                 GestureDetector(
                     onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const ViewJobs()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ViewJobs()));
                     },
                     child: appcolorText('See All'))
               ],

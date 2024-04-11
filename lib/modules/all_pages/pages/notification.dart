@@ -60,11 +60,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
               minLeadingWidth: 0,
               title: Container(
                 padding: const EdgeInsets.only(bottom: 6),
-                child: boldText('Grow Next Level Business'),
+                child: boldText('Grow Your Business'),
               ),
-              subtitle: greyTextSmall(
-                  'Hey this is test Notification which allow this archived profetional...'),
-              trailing: greyTextSmall('5:42 pm'),
+              subtitle:
+                  greyTextSmall('This is the notification for search job.....'),
+              trailing: greyTextSmall('3:15 pm'),
             ),
             const Divider(thickness: 1, color: backgroundColor)
           ],

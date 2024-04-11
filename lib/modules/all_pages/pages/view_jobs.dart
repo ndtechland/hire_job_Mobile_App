@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hirejobindia/modules/all_pages/pages/job_details.dart';
 import 'package:hirejobindia/widget/elevated_button.dart';
 import 'package:hirejobindia/widget/navbar.dart';
 
@@ -62,8 +63,8 @@ class _ViewJobsState extends State<ViewJobs> {
   Widget _buildJobs() {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(context,
-        //     MaterialPageRoute(builder: (context) => const JobDetails()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const JobDetails()));
       },
       child: Container(
         padding: const EdgeInsets.all(16),

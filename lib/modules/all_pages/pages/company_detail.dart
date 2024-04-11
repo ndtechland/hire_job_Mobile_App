@@ -4,6 +4,61 @@ import 'package:hirejobindia/components/styles.dart';
 import 'package:hirejobindia/modules/all_pages/pages/view_jobs.dart';
 import 'package:hirejobindia/widget/elevated_button.dart';
 import 'package:hirejobindia/widget/navbar.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+final Uri urlfb = Uri.parse('https://www.facebook.com/HireJobsIndia/');
+final Uri _urllnkdn = Uri.parse(
+    'https://www.linkedin.com/company/hire-job-india/?originalSubdomain=in');
+final Uri _urltwtr = Uri.parse('https://twitter.com/');
+final Uri _urlinsta = Uri.parse('https://www.instagram.com/hirejobindia/');
+final Uri _urlytube = Uri.parse('https://www.youtube.com/@HireJobIndia');
+
+// Future<void> _launchUrlfb() async {
+//   if (!await launchUrl(_urlfb)) {
+//     throw 'Could not launch $_urlfb';
+//   }
+// }
+
+Future<void> _launchUrlfb() async {
+  //const url = 'https://www.facebook.com/HireJobsIndia';
+  if (await canLaunch(urlfb.toString())) {
+    await launch(urlfb.toString());
+  } else {
+    throw 'Could not launch $urlfb';
+  }
+}
+
+Future<void> _launchUrllkdn() async {
+  if (await canLaunch(_urllnkdn.toString())) {
+    await launch(_urllnkdn.toString());
+  } else {
+    throw 'Could not launch $_urllnkdn';
+  }
+}
+
+Future<void> _launchUrltwtr() async {
+  if (await canLaunch(_urltwtr.toString())) {
+    await launch(_urltwtr.toString());
+  } else {
+    throw 'Could not launch $_urltwtr';
+  }
+}
+
+Future<void> _launchUrlinsta() async {
+  if (await canLaunch(_urlinsta.toString())) {
+    await launch(_urlinsta.toString());
+  } else {
+    throw 'Could not launch $_urlinsta';
+  }
+}
+
+Future<void> _launchUrlytbee() async {
+  if (await canLaunch(_urlytube.toString())) {
+    await launch(_urlytube.toString());
+  } else {
+    throw 'Could not launch $_urlytube';
+  }
+}
 
 class CompanyDetail extends StatefulWidget {
   static const String id = 'CompanyDetail';
@@ -256,18 +311,49 @@ class _CompanyDetailState extends State<CompanyDetail> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Image.asset('lib/assets/images/facebook.png',
-                      width: 40, height: 40, fit: BoxFit.cover),
-                  Image.asset('lib/assets/images/linkedinicon.png',
-                      width: 40, height: 40, fit: BoxFit.cover),
-                  Image.asset('lib/assets/images/twitter.png',
-                      width: 40, height: 40, fit: BoxFit.cover),
-                  Image.asset('lib/assets/images/instagram.png',
-                      width: 40, height: 40, fit: BoxFit.cover),
-                  Image.asset('lib/assets/images/youtube.png',
-                      width: 40, height: 40, fit: BoxFit.cover),
+                  InkWell(
+                    onTap: () async {
+                      await _launchUrlfb();
+                    },
+                    child: Image.asset('lib/assets/images/facebook.png',
+                        width: 40, height: 40, fit: BoxFit.cover),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      await _launchUrllkdn();
+                    },
+                    //https://www.linkedin.com/company/hire-job-india/?originalSubdomain=in
+                    child: Image.asset('lib/assets/images/linkedinicon.png',
+                        width: 40, height: 40, fit: BoxFit.cover),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      await _launchUrltwtr();
+                    },
+                    //https://twitter.com/home
+                    child: Image.asset('lib/assets/images/twitter.png',
+                        width: 40, height: 40, fit: BoxFit.cover),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      await _launchUrlinsta();
+                    },
+                    //https://www.instagram.com/hirejobindia/
+                    child: Image.asset('lib/assets/images/instagram.png',
+                        width: 40, height: 40, fit: BoxFit.cover),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      await _launchUrlytbee();
+                    },
+                    //https://www.youtube.com/@HireJobIndia
+                    child: Image.asset('lib/assets/images/youtube.png',
+                        width: 40, height: 40, fit: BoxFit.cover),
+                  ),
                 ],
               )),
+
+          ///
           const SizedBox(height: 8),
           blackHeadingSmall('Job Vacancies'.toUpperCase()),
           SingleChildScrollView(
@@ -366,4 +452,10 @@ class _CompanyDetailState extends State<CompanyDetail> {
       ),
     );
   }
+
+  //https://www.facebook.com/HireJobsIndia
+  //https://www.linkedin.com/company/hire-job-india/?originalSubdomain=in
+  //https://www.instagram.com/hirejobindia/
+  //https://www.youtube.com/@HireJobIndia
+
 }

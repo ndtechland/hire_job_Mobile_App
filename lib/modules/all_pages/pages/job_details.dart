@@ -26,7 +26,7 @@ class _JobDetailsState extends State<JobDetails> {
     return Scaffold(
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
-          title: const Text('Job Single Detail'),
+          title: const Text('Individual Job Detail'),
           centerTitle: true,
           titleSpacing: 0,
           actions: [
@@ -87,14 +87,14 @@ class _JobDetailsState extends State<JobDetails> {
         ),
         child: Column(
           children: [
-            Image.asset('lib/assets/images/n3.png', width: 40, height: 40),
+            Image.asset('lib/assets/images/n2.png', width: 40, height: 40),
             const SizedBox(height: 8),
-            blackHeadingSmall('Flutter Developer'),
+            blackHeadingSmall('PHP Developer'),
             const SizedBox(height: 4),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                greyText('\$75,000 - \$90,000 a year'),
+                greyText('₹ 4,75,000 - ₹ 7,90,000 a year'),
                 const SizedBox(width: 10),
                 Container(
                   padding:
@@ -112,14 +112,14 @@ class _JobDetailsState extends State<JobDetails> {
               children: [
                 Container(
                     padding: const EdgeInsets.only(right: 10),
-                    child: Image.asset('lib/assets/images/n3.png',
+                    child: Image.asset('lib/assets/images/n2.png',
                         width: 30, height: 30)),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      blackHeadingSmall('TATA Technology'),
-                      greyTextSmall('Mumbai, India')
+                      blackHeadingSmall('TCS'),
+                      greyTextSmall('Bangalore, India')
                     ],
                   ),
                 ),
@@ -330,14 +330,14 @@ class _JobDetailsState extends State<JobDetails> {
               children: [
                 Container(
                     padding: const EdgeInsets.only(right: 10),
-                    child: Image.asset('assets/images/n3.png',
+                    child: Image.asset('lib/assets/images/n1.png',
                         width: 30, height: 30)),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      blackHeadingSmall('Flutter Developer'),
-                      greyTextSmall('Gobook Tech. los Angeles, CA')
+                      blackHeadingSmall('PHP Developer'),
+                      greyTextSmall('ND Info PVT LTD, NOIDA')
                     ],
                   ),
                 ),
@@ -347,12 +347,13 @@ class _JobDetailsState extends State<JobDetails> {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: greyTextSmall(
-                  'It is a long established fact that a reader be distracted by content of page when looking at its layout..'),
+                  'It is an established Company and it is quality based company.'),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                boldText('\$35,000-\$85,000 a year'),
+                //                greyText('₹ 4,75,000 - ₹ 7,90,000 a year'),
+                boldText('₹ 4,75,000 - ₹ 7,90,000 a year'),
                 MyElevatedButton(
                     onPressed: () {},
                     text: btnText('Apply'),

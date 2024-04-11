@@ -170,7 +170,7 @@ class _FilterState extends State<Filter> {
         child: Text(title,
             style: TextStyle(
                 fontFamily: 'medium',
-                fontSize: 14,
+                fontSize: 12,
                 color: selectID == id ? Colors.white : Colors.black54)),
       ),
     );
