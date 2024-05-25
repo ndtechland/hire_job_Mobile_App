@@ -8,8 +8,10 @@
 */
 import 'package:flutter/material.dart';
 
-const appColor = Color(0xFF6F67FE);
-const appColor2 = Color(0xFFB446FF);
+const appColor = Color(0xFF602FF7);
+// 6F67FE);
+const appColor2 = Color(0xFFC55FFC);
+//B446FF);
 const linkedinColor = Color(0xFF0077B5);
 
 const backgroundColor = Color.fromARGB(255, 243, 243, 243);

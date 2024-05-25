@@ -5,10 +5,12 @@ import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:hirejobindia/controllers/nav_bar_controller/nav_controller.dart';
 import 'package:hirejobindia/modules/components/styles.dart';
-import 'package:hirejobindia/modules/splash_screen/splash_screen.dart';
 
-//import 'package:suvidha_app_ui/constants/language_string/language_text.dart';
-//import 'package:suvidha_app_ui/screens/welcome_page.dart';
+import 'controllers/view_job_controller/job_controllersss.dart';
+import 'modules/splash_screen/splash_screen.dart';
+// Import the AllJibsController
+//import 'package:hirejobindia/controllers/all_jibs_controller.dart';
+
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
@@ -19,6 +21,9 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 void main() {
+  HttpOverrides.global =
+      MyHttpOverrides(); // Don't forget to set the HttpOverrides
+
   runApp(const MyApp());
 }
 
@@ -37,11 +42,17 @@ class MyApp extends StatelessWidget {
         dividerColor: Colors.transparent,
       ),
       home: Scaffold(
-        body: SplashScreen(),
+        body:
+
+            ///PaymentScreen(),
+
+            SplashScreen(),
       ),
       initialBinding: BindingsBuilder(() {
         Get.lazyPut<BottomNavigationBarController>(
             () => BottomNavigationBarController());
+        // Add initialization for AllJibsController here
+        Get.lazyPut<AllJibsController>(() => AllJibsController());
       }),
     );
   }

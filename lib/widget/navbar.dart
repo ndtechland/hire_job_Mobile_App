@@ -90,10 +90,8 @@ class NavBar extends StatelessWidget {
               leading: const Icon(Icons.category),
               title: const Text('Categories'),
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const Categories()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Categories()));
               },
             ),
             ListTile(

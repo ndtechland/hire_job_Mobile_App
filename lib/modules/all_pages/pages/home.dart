@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hirejobindia/components/styles.dart';
 import 'package:hirejobindia/modules/all_pages/pages/categories.dart';
 import 'package:hirejobindia/modules/all_pages/pages/company.dart';
@@ -6,6 +7,11 @@ import 'package:hirejobindia/modules/all_pages/pages/filter.dart';
 import 'package:hirejobindia/modules/all_pages/pages/view_jobs.dart';
 import 'package:hirejobindia/widget/elevated_button.dart';
 import 'package:hirejobindia/widget/navbar.dart';
+
+import '../../../components/responsive_text.dart';
+import '../../../constants/static_text.dart';
+import '../../../controllers/catagory_controllerss/get_catagory_controller.dart';
+import '../../../controllers/home_page_controllerss/home_page_controllerss.dart';
 
 class Home extends StatefulWidget {
   static const String id = 'Home';
@@ -43,6 +49,10 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
+  AllcatagoryController _allcatagoryController =
+      Get.put(AllcatagoryController());
+
+  HomePageController _homePageController = Get.put(HomePageController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +64,11 @@ class _HomeState extends State<Home> {
         centerTitle: true,
         titleSpacing: 0,
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+          IconButton(
+              onPressed: () {
+                Get.to(ViewJobs());
+              },
+              icon: const Icon(Icons.search)),
           IconButton(
               onPressed: () {
                 Navigator.push(context,
@@ -90,10 +104,12 @@ class _HomeState extends State<Home> {
                 blackHeadingSmall('All Category'.toUpperCase()),
                 GestureDetector(
                     onTap: () {
+                      _allcatagoryController.catagoryListApi();
+                      _allcatagoryController.update();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Categories()));
+                              builder: (context) => Categories()));
                     },
                     child: appcolorText('See All'))
               ],
@@ -103,11 +119,99 @@ class _HomeState extends State<Home> {
             scrollDirection: Axis.horizontal,
             child: Container(
               padding: const EdgeInsets.only(left: 16),
-              child: Row(
-                children: cateList.map((e) {
-                  return _buildCategory(context, e);
-                }).toList(),
-              ),
+              child: Obx(() {
+                if (_allcatagoryController.isLoading.value) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (_allcatagoryController.foundcategory.isEmpty) {
+                  return Center(child: Text('No categories found'));
+                }
+                return Row(
+                  children:
+                      _allcatagoryController.foundcategory.map((category) {
+                    return GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                            top: 16, bottom: 16, right: 12),
+                        width: 110,
+                        height: 90,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              offset: Offset(2, 2),
+                              blurRadius: 8,
+                              color: Color.fromRGBO(0, 0, 0, 0.16),
+                            )
+                          ],
+                          borderRadius: BorderRadius.all(Radius.circular(6)),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Spacer(),
+
+                            responsiveContainer(
+                              // padding: const EdgeInsets.only(right: 0),
+                              //height: 20,
+                              //width: 20,
+                              heightPortrait:
+                                  MediaQuery.of(context).size.height * 0.055,
+                              widthPortrait:
+                                  MediaQuery.of(context).size.width * 0.12,
+                              heightLandscape:
+                                  MediaQuery.of(context).size.height * 0.1,
+                              widthLandscape:
+                                  MediaQuery.of(context).size.width * 0.06,
+                              // height: MediaQuery.of(context).size.height *
+                              //     0.05, // 20% of screen height if not provided
+                              // width: MediaQuery.of(context).size.width * 0.09,
+                              child: category.postedImage != null
+                                  ? Image.network(
+                                      FixedText.imgurl +
+                                          category.postedImage.toString(),
+                                      color: appColor,
+                                      fit: BoxFit.fill,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Image.asset(
+                                          'lib/assets/logo/noimageavlble.jpg',
+                                          fit: BoxFit.fill,
+                                        );
+                                      },
+                                    )
+                                  : Image.network(
+                                      'https://ih1.redbubble.net/image.5098928927.2456/flat,750x,075,f-pad,750x1000,f8f8f8.u2.jpg',
+                                      fit: BoxFit.fill,
+                                    ),
+                              context: context,
+                            ),
+                            Spacer(),
+                            responsiveText(
+                              context: context,
+                              text:
+                                  "${category?.postedtype ?? 'Unknown Category'}",
+                              fontSizePortrait: 10,
+                              fontSizeLandscape: 10,
+                              color: Colors.black,
+                            ),
+                            Spacer(),
+                            // boldTextcat(category?.postedtype ??
+                            //     'Unknown Category'),
+                            //SizedBox(height: 4),
+                            greyTextSmall(
+                              '(${category?.noofopening ?? 'Not Found'} jobs)',
+                            ),
+                            Spacer(),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                );
+              }),
             ),
           ),
           Container(
@@ -118,10 +222,8 @@ class _HomeState extends State<Home> {
                 blackHeadingSmall('Jobs'.toUpperCase()),
                 GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ViewJobs()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => ViewJobs()));
                     },
                     child: appcolorText('See All'))
               ],
@@ -174,10 +276,8 @@ class _HomeState extends State<Home> {
                 blackHeadingSmall('Featured jobs'.toUpperCase()),
                 GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ViewJobs()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => ViewJobs()));
                     },
                     child: appcolorText('See All'))
               ],

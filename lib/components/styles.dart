@@ -59,7 +59,7 @@ blackHeadingSmall(val) {
     child: Text(
       val,
       style: const TextStyle(
-          fontSize: 16, fontFamily: 'medium', color: Colors.black),
+          fontSize: 13, fontFamily: 'medium', color: Colors.black),
     ),
   );
 }
@@ -68,7 +68,21 @@ boldText(val) {
   return Text(
     val,
     style: const TextStyle(
-        fontSize: 14, fontFamily: 'medium', color: Colors.black),
+        fontSize: 12, fontFamily: 'medium', color: Colors.black),
+  );
+}
+
+boldTextcat(val) {
+  return SizedBox(
+    width: 65,
+    height: 24,
+    child: Center(
+      child: Text(
+        val,
+        style: const TextStyle(
+            fontSize: 10, fontFamily: 'medium', color: Colors.black),
+      ),
+    ),
   );
 }
 
@@ -109,6 +123,22 @@ greyTextSmall(val) {
   return Text(
     val,
     style: const TextStyle(fontSize: 12, color: Colors.black54),
+  );
+}
+
+TextSmallbold(val) {
+  return Text(
+    val,
+    style: const TextStyle(
+        fontSize: 11, color: appColor, fontWeight: FontWeight.w700),
+  );
+}
+
+TextSmalllocation(val) {
+  return Text(
+    val,
+    style: const TextStyle(
+        fontSize: 10, color: Colors.black54, fontWeight: FontWeight.w600),
   );
 }
 

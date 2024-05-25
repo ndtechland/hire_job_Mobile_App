@@ -19,11 +19,11 @@ class _SliderScreenState extends State<SliderScreen> {
   final CarouselController _controller = CarouselController();
 
   List<Item> imgList = <Item>[
-    const Item('lib/assets/images/s1.jpg', 'SEARCH YOUR JOBS',
+    const Item('lib/assets/images/s11.jpg', 'SEARCH YOUR JOBS',
         'If you\'re looking for a part-time or full time job, hire job india in your app.'),
-    const Item('lib/assets/images/s2.jpg', 'APPLY YOUR JOB',
+    const Item('lib/assets/images/s13.jpg', 'APPLY YOUR JOB',
         'If you\'re looking for a part-time or full time job, hire job india in your app.'),
-    const Item('lib/assets/images/s3.jpg', 'READY TO WORK WITH US!',
+    const Item('lib/assets/images/s10.jpg', 'READY TO WORK WITH US!',
         'If you\'re looking for a part-time or full time job, hire job india in your app.'),
   ];
 
@@ -94,7 +94,10 @@ class _SliderScreenState extends State<SliderScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 MyTextButton(
-                    onPressed: () {}, text: 'SKIP', colors: Colors.black54),
+                    onPressed: () {},
+                    text: '',
+                    //'SKIP',
+                    colors: Colors.black54),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: imgList.asMap().entries.map((entry) {
@@ -121,9 +124,13 @@ class _SliderScreenState extends State<SliderScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Welcome()));
+                            builder: (context) =>
+                                //ViewJobs()
+                                Welcome(),
+                          ));
                     },
-                    text: 'NEXT',
+                    text: 'SKIP',
+                    //'NEXT',
                     colors: appColor)
               ],
             )
