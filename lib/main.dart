@@ -51,6 +51,8 @@ class MyApp extends StatelessWidget {
       initialBinding: BindingsBuilder(() {
         Get.lazyPut<BottomNavigationBarController>(
             () => BottomNavigationBarController());
+        Get.lazyPut<AllJibsController>(
+            () => AllJibsController()); //AllcompanyController
         // Add initialization for AllJibsController here
         Get.lazyPut<AllJibsController>(() => AllJibsController());
       }),

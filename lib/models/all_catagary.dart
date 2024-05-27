@@ -26,14 +26,14 @@ class PostedByModel {
 }
 
 class PostedByItem {
-  final int id;
+  final num id;
   final String postedtype;
   final String addedOn;
   final bool status;
   final bool isDelete;
-  final int addedBy;
+  final num addedBy;
   final String postedImage;
-  final int noofopening;
+  final num noofopening;
   final dynamic imageFile;
   final dynamic statusddl;
 

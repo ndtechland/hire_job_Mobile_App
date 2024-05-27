@@ -117,7 +117,7 @@ class NavBar extends StatelessWidget {
               title: const Text('Companies'),
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Company()));
+                    MaterialPageRoute(builder: (context) => Company()));
               },
             ),
 

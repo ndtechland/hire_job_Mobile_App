@@ -60,10 +60,8 @@ class _InviteFriendState extends State<InviteFriend> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: MyElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Home()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Home()));
                     },
                     text: Text(
                       'Invite Now'.toUpperCase(),

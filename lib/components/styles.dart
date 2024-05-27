@@ -126,6 +126,26 @@ greyTextSmall(val) {
   );
 }
 
+greyTextSmall2(val) {
+  return Text(
+    val,
+    style: const TextStyle(fontSize: 10, color: Colors.black54),
+  );
+}
+
+greyTextSmall3(String val) {
+  return Text(
+    val,
+    style: TextStyle(
+      fontSize: 10,
+      color: Colors.black54,
+    ),
+    maxLines: 6,
+    overflow: TextOverflow
+        .ellipsis, // This will add "..." if the text exceeds the maximum lines
+  );
+}
+
 TextSmallbold(val) {
   return Text(
     val,

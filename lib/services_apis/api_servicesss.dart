@@ -8,6 +8,8 @@ import 'package:http/http.dart' as http;
 
 import '../constants/static_text.dart';
 import '../models/all_jobs_model.dart';
+import '../models/company_model.dart';
+import '../models/testimonial_model.dart';
 
 var prefs = GetStorage();
 
@@ -404,7 +406,7 @@ class ApiProvider {
     }
   }
 
-  ///api 2.....all jobs....
+  ///api 2.....all cat....
   ///
 
   static Future<PostedByModel?> AllcatagoryApi() async {
@@ -421,6 +423,63 @@ class ApiProvider {
     } catch (error) {
       print('Error fetching categories: $error');
       return null;
+    }
+  }
+
+  ///api 3.....all com....
+  ///
+
+  static Future<CompanyResponse?> AllcompanyApi() async {
+    var url = "${baseUrl}App/CompanyList";
+    try {
+      http.Response response = await http.get(Uri.parse(url));
+      print(response.body);
+      if (response.statusCode == 200) {
+        return CompanyResponse.fromJson(jsonDecode(response.body));
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+        return null;
+      }
+    } catch (error) {
+      print('Error fetching companies: $error');
+      return null;
+    }
+  }
+
+  ///api 3.....all testimonial.........
+  ///
+
+  // static Future<Testimonial?> AlltestimonialApi() async {
+  //   var url = "${baseUrl}Admin/getAllTestimonial";
+  //   try {
+  //     http.Response response = await http.get(Uri.parse(url));
+  //     print(response.body);
+  //     if (response.statusCode == 200) {
+  //       return Testimonial.fromJson(jsonDecode(response.body));
+  //     } else {
+  //       print('Request failed with status: ${response.statusCode}');
+  //       return null;
+  //     }
+  //   } catch (error) {
+  //     print('Error fetching testimonial: $error');
+  //     return null;
+  //   }
+  // }
+
+  static AllTestimonialApi() async {
+    var url = "${baseUrl}Admin/getAllTestimonial";
+    try {
+      http.Response r = await http.get(Uri.parse(url));
+      print(r.body.toString());
+      if (r.statusCode == 200) {
+        var GettestimonialModel = allTestimonialModelFromJson(r.body);
+        return GettestimonialModel;
+      }
+      print(url);
+      print(r.body);
+      print(r.statusCode);
+    } catch (error) {
+      return;
     }
   }
 
