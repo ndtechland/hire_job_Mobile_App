@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:hirejobindia/components/styles.dart';
 import 'package:hirejobindia/modules/all_pages/pages/categories.dart';
 import 'package:hirejobindia/modules/all_pages/pages/company.dart';
-import 'package:hirejobindia/modules/all_pages/pages/filter.dart';
 import 'package:hirejobindia/modules/all_pages/pages/testimonials_employee.dart';
 import 'package:hirejobindia/modules/all_pages/pages/view_jobs.dart';
 import 'package:hirejobindia/widget/elevated_button.dart';
@@ -16,7 +15,9 @@ import '../../../controllers/catagory_controllerss/get_catagory_controller.dart'
 import '../../../controllers/company_controllers/company_controller.dart';
 import '../../../controllers/home_page_controllerss/home_page_controllerss.dart';
 import '../../../controllers/testimonial_controllerr/testimonial_controllersss.dart';
+import '../../../controllers/user_profile_controller/user_profile_controller.dart';
 import '../../../controllers/view_job_controller/job_controllersss.dart';
+import '../../../widget/elevated_button2.dart';
 import 'job_details.dart';
 
 class Home extends StatefulWidget {
@@ -66,6 +67,8 @@ class _HomeState extends State<Home> {
   AlltestimonialController _alltestimonialController =
       Get.put(AlltestimonialController());
 
+  ProfileController _profileController = Get.find();
+
   String stripHtmlTags(String htmlString) {
     final RegExp exp = RegExp(r'<[^>]*>', multiLine: true, caseSensitive: true);
     return htmlString.replaceAll(exp, '');
@@ -75,7 +78,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: const NavBar(),
+      drawer: NavBar(),
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text('Home'),
@@ -83,23 +86,37 @@ class _HomeState extends State<Home> {
         titleSpacing: 0,
         actions: [
           IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => ViewJobs()));
+              // Navigate to search page
+            },
+            icon: const Icon(Icons.search),
+            padding:
+                EdgeInsets.symmetric(vertical: 8), // Adjust vertical padding
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: CustomElevatedButton(
               onPressed: () {
-                Get.to(ViewJobs());
+                // Add your onPressed logic here
               },
-              icon: const Icon(Icons.search)),
-          IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Filter()));
-              },
-              icon: const Icon(Icons.filter_list)),
+              text: "E-Login",
+              backgroundColor: Colors.white,
+              textColor: appColor,
+              elevation: 2,
+              borderRadius: 15,
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+            ),
+          )
         ],
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: <Color>[appColor2, appColor]),
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: <Color>[appColor2, appColor],
+            ),
           ),
         ),
         elevation: 0,

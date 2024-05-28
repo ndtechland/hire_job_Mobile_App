@@ -79,7 +79,7 @@ class _WelcomeState extends State<Welcome> {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const Login()));
+            context, MaterialPageRoute(builder: (context) => Login()));
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),

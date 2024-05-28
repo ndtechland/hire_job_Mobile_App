@@ -21,7 +21,7 @@ class _InboxState extends State<Inbox> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: const NavBar(),
+        drawer: NavBar(),
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
           title: const Text('MESSAGES'),

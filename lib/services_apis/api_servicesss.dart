@@ -9,12 +9,15 @@ import 'package:http/http.dart' as http;
 import '../constants/static_text.dart';
 import '../models/all_jobs_model.dart';
 import '../models/company_model.dart';
+import '../models/profile_model.dart';
 import '../models/testimonial_model.dart';
+import '../modules/all_pages/pages/home.dart';
 
 var prefs = GetStorage();
 
 class ApiProvider {
   /// static var baseUrl = 'http://test.pswellness.in/';
+  /// "https://api.hirejobindia.com/api/";
 
   static var baseUrl = FixedText.apiurl;
   //'https://api.hirejobindia.com/api/';
@@ -447,24 +450,6 @@ class ApiProvider {
   }
 
   ///api 3.....all testimonial.........
-  ///
-
-  // static Future<Testimonial?> AlltestimonialApi() async {
-  //   var url = "${baseUrl}Admin/getAllTestimonial";
-  //   try {
-  //     http.Response response = await http.get(Uri.parse(url));
-  //     print(response.body);
-  //     if (response.statusCode == 200) {
-  //       return Testimonial.fromJson(jsonDecode(response.body));
-  //     } else {
-  //       print('Request failed with status: ${response.statusCode}');
-  //       return null;
-  //     }
-  //   } catch (error) {
-  //     print('Error fetching testimonial: $error');
-  //     return null;
-  //   }
-  // }
 
   static AllTestimonialApi() async {
     var url = "${baseUrl}Admin/getAllTestimonial";
@@ -483,20 +468,71 @@ class ApiProvider {
     }
   }
 
-  // var url = "${baseUrl}Admin/FilterData";
-  // Future<Map<String, dynamic>> AllcatagoryApi() async {
-  //   try {
-  //     final response = await http.get(Uri.parse(url));
-  //     if (response.statusCode == 200) {
-  //       return json.decode(response.body);
-  //     } else {
-  //       throw Exception('Failed to load categories: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching categories: $e');
-  //     throw Exception('Failed to load categories: $e');
-  //   }
-  // }
+  ///4.login_email..........post...apis...
+  static Future<http.Response> LoginApi(String emailId, String password) async {
+    var url = "${baseUrl}Login/ProfileLogin";
+    var body = jsonEncode({
+      "emailId": emailId,
+      "password": password,
+    });
+
+    print("loginnnn");
+    print(body);
+
+    http.Response r = await http.post(
+      Uri.parse(url),
+      body: body,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    );
+
+    print(r.body);
+
+    if (r.statusCode == 200) {
+      var responseData = json.decode(r.body);
+      var userId = responseData['loginProfile']['id'];
+
+      // Save user ID (assuming 'Id' is part of the response JSON)
+      prefs.write("Id", userId);
+      print('Saved userId: $userId');
+
+      // Navigate to HomePage
+      Get.to(() => Home());
+
+      return r;
+    } else if (r.statusCode == 401) {
+      Get.snackbar('Message', r.body);
+    } else {
+      Get.snackbar('Error', r.body);
+    }
+
+    return r;
+  }
+
+  ///5.profile_api...
+  static PriofileApi() async {
+    var prefs = GetStorage();
+
+    //saved userid..........
+    //prefs.write("Id".toString(), json.decode(r.body)['Id']);
+    userid = prefs.read("Id").toString();
+    print('wwwuseridEE:${userid}');
+    //https://api.hirejobindia.com/api/App/GetProfile?userId=2
+    var url = '${baseUrl}App/GetProfile?userId=$userid';
+    try {
+      http.Response r = await http.get(Uri.parse(url));
+      if (r.statusCode == 200) {
+        print("url");
+        print(url);
+        GetProfileModel? geetprofilemodel = getProfileModelFromJson(r.body);
+        print("profile: ${geetprofilemodel.response!.emailId}");
+        return geetprofilemodel;
+      }
+    } catch (error) {
+      print('profileedetaileror: $error');
+    }
+  }
 
   ///todo: device  user token for user........
 }

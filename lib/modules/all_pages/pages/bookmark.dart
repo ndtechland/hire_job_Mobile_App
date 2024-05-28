@@ -21,7 +21,7 @@ class _BookmarkState extends State<Bookmark> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: const NavBar(),
+        drawer: NavBar(),
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
           title: const Text('BOOKMARK'),

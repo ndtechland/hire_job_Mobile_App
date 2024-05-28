@@ -27,7 +27,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: const NavBar(),
+        drawer: NavBar(),
         extendBodyBehindAppBar: true,
         backgroundColor: backgroundColor,
         // appBar: AppBar(

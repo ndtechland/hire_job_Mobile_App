@@ -92,7 +92,10 @@ class _ChangePasswordState extends State<ChangePassword> {
               padding: const EdgeInsets.all(24),
               child: Column(
                 children: [
-                  textField('Password', Icons.mail_outline),
+                  textField(
+                    'Password',
+                    Icons.mail_outline,
+                  ),
                   textField('Confirm Password', Icons.mail_outline),
                   const SizedBox(height: 20),
                 ],
@@ -101,7 +104,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             MyElevatedButton(
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Login()));
+                      MaterialPageRoute(builder: (context) => Login()));
                 },
                 text: const Icon(Icons.arrow_forward),
                 height: 40,

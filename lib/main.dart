@@ -6,6 +6,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:hirejobindia/controllers/nav_bar_controller/nav_controller.dart';
 import 'package:hirejobindia/modules/components/styles.dart';
 
+import 'controllers/user_profile_controller/user_profile_controller.dart';
 import 'controllers/view_job_controller/job_controllersss.dart';
 import 'modules/splash_screen/splash_screen.dart';
 // Import the AllJibsController
@@ -51,8 +52,11 @@ class MyApp extends StatelessWidget {
       initialBinding: BindingsBuilder(() {
         Get.lazyPut<BottomNavigationBarController>(
             () => BottomNavigationBarController());
-        Get.lazyPut<AllJibsController>(
-            () => AllJibsController()); //AllcompanyController
+        Get.lazyPut<AllJibsController>(() => AllJibsController());
+        Get.lazyPut<ProfileController>(() => ProfileController());
+
+        //AllcompanyController
+
         // Add initialization for AllJibsController here
         Get.lazyPut<AllJibsController>(() => AllJibsController());
       }),

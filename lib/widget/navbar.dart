@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:hirejobindia/components/styles.dart';
 import 'package:hirejobindia/modules/all_pages/pages/applied_jobs.dart';
 import 'package:hirejobindia/modules/all_pages/pages/bookmark.dart';
@@ -7,9 +9,18 @@ import 'package:hirejobindia/modules/all_pages/pages/company.dart';
 import 'package:hirejobindia/modules/all_pages/pages/invite_friend.dart';
 import 'package:hirejobindia/modules/all_pages/pages/notification.dart';
 import 'package:hirejobindia/modules/all_pages/pages/profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../controllers/login_controllers/login_controllersss.dart';
+import '../controllers/user_profile_controller/user_profile_controller.dart';
+import '../modules/all_pages/pages/login.dart';
 
 class NavBar extends StatelessWidget {
-  const NavBar({Key? key}) : super(key: key);
+  NavBar({Key? key}) : super(key: key);
+  LoginController _loginController = Get.put(LoginController());
+  final ProfileController _profileController = Get.find();
+
+  final snackBarDuration = Duration(seconds: 3); // Define your desired duration
 
   @override
   Widget build(BuildContext context) {
@@ -40,15 +51,15 @@ class NavBar extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const Text(
-                      'Kumar Prince',
+                    Text(
+                      "${_profileController.getprofileModel?.response?.fullName.toString()}",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Text(
-                      'prince@gmail.com',
+                    Text(
+                      "${_profileController.getprofileModel?.response?.emailId.toString()}",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.normal,
@@ -155,11 +166,39 @@ class NavBar extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Log Out'),
-              onTap: () {
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => const NotificationScreen()));
+              onTap: () async {
+                // Show loading dialog
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                );
+
+                _loginController.onInit();
+
+                await Future.delayed(Duration(seconds: 1));
+
+                await SharedPreferences.getInstance()
+                    .then((prefs) => prefs.clear());
+
+                // Hide loading dialog
+                Get.back();
+
+                // Navigate to login screen
+                await Get.offAll(() => Login());
+
+                // Show success snackbar
+                Get.snackbar(
+                  'Success',
+                  'Successfully logged out',
+                  snackPosition: SnackPosition.TOP,
+                  backgroundColor: Colors.green,
+                  duration: snackBarDuration, // Set the duration
+                );
               },
             ),
           ],

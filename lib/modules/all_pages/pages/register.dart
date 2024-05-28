@@ -136,10 +136,8 @@ class _RegisterState extends State<Register> {
                     blackText('Dont have an account?'),
                     MyTextButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Login()));
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Login()));
                         },
                         colors: appColor,
                         text: "Sign in")
