@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hirejobindia/models/all_catagary.dart';
+import 'package:hirejobindia/models/applied_job_model.dart';
+import 'package:hirejobindia/modules/all_pages/pages/bookmark.dart';
 import 'package:http/http.dart' as http;
 
 import '../constants/static_text.dart';
 import '../models/all_jobs_model.dart';
 import '../models/company_model.dart';
 import '../models/profile_model.dart';
+import '../models/saved_job_model.dart';
 import '../models/testimonial_model.dart';
 import '../modules/all_pages/pages/home.dart';
 
@@ -534,5 +537,205 @@ class ApiProvider {
     }
   }
 
-  ///todo: device  user token for user........
+  ///6.job apply successfully..........post...apis...
+  static Future<http.Response> ApplyJobAPi(String JobId) async {
+    userid = prefs.read("Id").toString();
+    print('www:${userid}');
+    var url = "${baseUrl}App/Applyjob";
+    var body = jsonEncode({
+      "JobId": JobId,
+      "userID": userid,
+    });
+
+    print("jobapply");
+    print(body);
+
+    http.Response r = await http.post(
+      Uri.parse(url),
+      body: body,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    );
+    print('okapplyjob');
+    print(r.body);
+
+    if (r.statusCode == 200) {
+      Get.snackbar(
+        'Success',
+        "Job Apply Successfully",
+        backgroundColor:
+            Colors.green.shade300, // Set the background color to green
+        snackPosition: SnackPosition.TOP, // Set the position of the snackbar
+        duration: Duration(
+            seconds: 2), // Set the duration of the snackbar to 2 seconds
+      );
+      // Navigate to HomePage
+      //Get.to(() => Home());
+
+      return r;
+    } else if (r.statusCode == 401) {
+      Get.snackbar(
+        'Message',
+        r.body,
+        backgroundColor: Colors.red, // Set the background color to green
+        snackPosition: SnackPosition.TOP, // Set the position of the snackbar
+        duration: Duration(
+            seconds: 2), // Set the duration of the snackbar to 2 seconds
+      );
+    } else {
+      Get.snackbar(
+        'Error',
+        r.body,
+        backgroundColor: Colors.red, // Set the background color to green
+        snackPosition: SnackPosition.TOP, // Set the position of the snackbar
+        duration: Duration(
+            seconds: 2), // Set the duration of the snackbar to 2 seconds
+      );
+    }
+
+    return r;
+  }
+
+  ///6.job save successfully..........post...apis...
+  static Future<http.Response> SaveJobAPi(String JobId) async {
+    userid = prefs.read("Id").toString();
+    print('www:${userid}');
+    var url = "${baseUrl}App/AddBookmark";
+    var body = jsonEncode({
+      "JobId": JobId,
+      "userID": userid,
+    });
+
+    print("jobsave");
+    print(body);
+
+    http.Response r = await http.post(
+      Uri.parse(url),
+      body: body,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    );
+    print('okapplyjob');
+    print(r.body);
+
+    if (r.statusCode == 200) {
+      Get.snackbar(
+        'Success',
+        "Job Saved Successfully",
+        backgroundColor:
+            Colors.green.shade300, // Set the background color to green
+        snackPosition: SnackPosition.TOP, // Set the position of the snackbar
+        duration: Duration(
+            seconds: 2), // Set the duration of the snackbar to 2 seconds
+      );
+      // Navigate to HomePage
+      /// Get.to(() => Home());
+
+      return r;
+    } else if (r.statusCode == 401) {
+      Get.snackbar(
+        'Message',
+        r.body,
+        backgroundColor: Colors.red, // Set the background color to green
+        snackPosition: SnackPosition.TOP, // Set the position of the snackbar
+        duration: Duration(
+            seconds: 2), // Set the duration of the snackbar to 2 seconds
+      );
+    } else {
+      Get.snackbar(
+        'Error',
+        r.body,
+        backgroundColor: Colors.red, // Set the background color to green
+        snackPosition: SnackPosition.TOP, // Set the position of the snackbar
+        duration: Duration(
+            seconds: 2), // Set the duration of the snackbar to 2 seconds
+      );
+    }
+
+    return r;
+  }
+
+  ///api 7.....all  saved jobs....
+  static AllSavedJobsApi() async {
+    userid = prefs.read("Id").toString();
+    print('wwwsaved:${userid}');
+    var url = "${baseUrl}App/GetBookmarks?userId=$userid";
+    try {
+      http.Response r = await http.get(Uri.parse(url));
+      print(r.body.toString());
+      if (r.statusCode == 200) {
+        var GetJobSavedListModel = allJobsSavedApiFromJson(r.body);
+        return GetJobSavedListModel;
+      }
+      print(url);
+      print(r.body);
+      print(r.statusCode);
+    } catch (error) {
+      return;
+    }
+  }
+
+  ///api 8.....all  saved jobs....
+  static AllAppliedJobsApi() async {
+    userid = prefs.read("Id").toString();
+    print('wwwsaved:${userid}');
+    var url = "${baseUrl}App/GetJobapplyList?userId=$userid";
+    try {
+      http.Response r = await http.get(Uri.parse(url));
+      print(r.body.toString());
+      if (r.statusCode == 200) {
+        var GetJobAppliedListModel = allJobsAppliedApiFromJson(r.body);
+        return GetJobAppliedListModel;
+      }
+      print(url);
+      print(r.body);
+      print(r.statusCode);
+    } catch (error) {
+      return;
+    }
+  }
+
+  ///api.9. delete  apis.....
+  static Future<bool> deleteJobApi(int jobId) async {
+    //https://api.hirejobindia.com/api/App/DeleteBookmarkjob/?id=5
+    var url = "${baseUrl}App/DeleteBookmarkjob/?id=$jobId";
+
+    final url2 = Uri.parse(url);
+    final response = await http.delete(url2);
+
+    print("urldlt111");
+    print(url);
+
+    if (response.statusCode == 200) {
+      print("urldlt");
+      print(url);
+      Get.to(Bookmark());
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  ///registration....
+  static Future<http.Response> createProfile(
+      Map<String, dynamic> formData) async {
+    const String apiUrl =
+        'https://api.hirejobindia.com/api/Login/createProfile';
+
+    try {
+      final http.Response response = await http.post(
+        Uri.parse(apiUrl),
+        body: formData,
+      );
+
+      return response;
+    } catch (error) {
+      throw Exception('Failed to create profile: $error');
+    }
+  }
 }
+
+///todo: device  user token for user........

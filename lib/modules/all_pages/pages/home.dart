@@ -111,7 +111,7 @@ class _HomeState extends State<Home> {
           )
         ],
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -300,193 +300,195 @@ class _HomeState extends State<Home> {
                       ? Center(child: CircularProgressIndicator())
                       : SingleChildScrollView(
                           padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Expanded(
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const ScrollPhysics(),
-                                  itemCount: _allJibsController.foundJobs.length
-                                      .clamp(0, 2), // Show only 2 items,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    final packageText = (_allJibsController
-                                                    .foundJobs[index].package ==
-                                                null ||
-                                            _allJibsController.foundJobs![index]
-                                                .package!.isEmpty)
-                                        ? "Not disclose"
-                                        : _allJibsController
-                                            .foundJobs![index].package!;
-                                    return GestureDetector(
-                                      onTap: () async {
-                                        ///todo: saving Id...for job descriptions...
-                                        // Set isLoading to true
-                                        isLoading.value = true;
-
-                                        SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-                                        prefs.setString(
-                                            "JobListId",
-                                            _allJibsController
-                                                .foundJobs[index].id
-                                                .toString());
-
-                                        print(
-                                            "sadsad${_allJibsController.foundJobs[index].id.toString()}");
-
-                                        await Future.delayed(
-                                            Duration(seconds: 1));
-
-                                        // Set isLoading to false
-                                        isLoading.value = false;
-
-                                        await Get.to(JobDetails());
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.all(16),
-                                        margin: const EdgeInsets.symmetric(
-                                            vertical: 8, horizontal: 16),
-                                        decoration: const BoxDecoration(
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black12,
-                                              blurRadius: 20.0,
-                                            ),
-                                          ],
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(6.0)),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                    right: 10,
-                                                  ),
-                                                  height:
-                                                      textfieldHeight * 0.26,
-                                                  width: textfieldWidth * 0.19,
-                                                  // color: appColor2,
-                                                  child: ClipOval(
-                                                    clipBehavior: Clip.none,
-                                                    child: Image.network(
-                                                      FixedText.imgurl +
-                                                          _allJibsController
-                                                              .foundJobs[index]
-                                                              .companyImage
-                                                              .toString(),
-                                                      fit: BoxFit.fill,
-                                                      // or BoxFit.fill based on your preference
-                                                      // width: 30,
-                                                      //height: 30,
-                                                      errorBuilder: (context,
-                                                          error, stackTrace) {
-                                                        // If an error occurs while loading the image
-                                                        // Return a circular placeholder or an error image
-                                                        return ClipOval(
-                                                          child: Image.asset(
-                                                            'lib/assets/logo/noimageavlble.jpg',
-                                                            // Provide the path to your placeholder or error image
-                                                            width: 30,
-                                                            height: 30,
-                                                            fit: BoxFit
-                                                                .cover, // or BoxFit.fill based on your preference
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      blackHeadingSmall(
-                                                        _allJibsController
-                                                            .foundJobs[index]
-                                                            .jobTitle,
-
-                                                        //'Python Developer'
-                                                      ),
-                                                      TextSmallbold(
-                                                        _allJibsController
-                                                            .foundJobs[index]
-                                                            .companyName,
-                                                        //'Job IT PVT LTD, Noida India'
-                                                      ),
-                                                      TextSmalllocation(
-                                                        _allJibsController
-                                                            .foundJobs[index]
-                                                            .location,
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                                boldText(
-                                                  _allJibsController
-                                                      .foundJobs[index]
-                                                      .requiredExperience,
-                                                ),
-                                              ],
-                                            ),
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 8),
-                                              child: greyTextSmall(
-                                                stripHtmlTags(_allJibsController
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: const ScrollPhysics(),
+                            itemCount: _allJibsController.foundJobs.length
+                                .clamp(0, 2), // Show only 2 items,
+                            itemBuilder: (BuildContext context, int index) {
+                              final packageText = (_allJibsController
+                                              .foundJobs[index].package ==
+                                          null ||
+                                      _allJibsController
+                                          .foundJobs[index].package!.isEmpty)
+                                  ? "Not disclose"
+                                  : _allJibsController
+                                      .foundJobs[index].package!;
+                              return Container(
+                                padding: const EdgeInsets.all(16),
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 16),
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 20.0,
+                                    ),
+                                  ],
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(6.0)),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () async {
+                                            isLoading.value = true;
+                                            SharedPreferences prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            prefs.setString(
+                                                "JobListId",
+                                                _allJibsController
+                                                    .foundJobs[index].id
+                                                    .toString());
+                                            print(
+                                                "sadsad${_allJibsController.foundJobs[index].id.toString()}");
+                                            await Future.delayed(
+                                                Duration(seconds: 0));
+                                            isLoading.value = false;
+                                            await Get.to(JobDetails());
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.only(
+                                                right: 10),
+                                            height: textfieldHeight * 0.26,
+                                            width: textfieldWidth * 0.19,
+                                            child: ClipOval(
+                                              clipBehavior: Clip.none,
+                                              child: Image.network(
+                                                FixedText.imgurl +
+                                                    _allJibsController
                                                         .foundJobs[index]
-                                                        .skills ??
-                                                    "No skills listed"),
-
-                                                // _allJibsController
-                                                //     .foundJobs[index].skills,
-
-                                                //'It is an established Company and This company based on Banking Sector Projects.',
+                                                        .companyImage
+                                                        .toString(),
+                                                fit: BoxFit.fill,
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return ClipOval(
+                                                    child: Image.asset(
+                                                      'lib/assets/logo/noimageavlble.jpg',
+                                                      width: 30,
+                                                      height: 30,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  );
+                                                },
                                               ),
                                             ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                boldText("₹  ${packageText
-                                                    //_allJibsController.foundJobs[index].package ?? "Not disclose"
-                                                    }"
-                                                    //'₹ 3,10,000- ₹ 5,20,000 per year'
-                                                    ),
-                                                MyElevatedButton(
-                                                  onPressed: () {
-                                                    // ApiProvider.AllJobsApi();
-                                                    //Get.to(Welcome());
-                                                    // Navigator.push(
-                                                    //   context,
-                                                    //   MaterialPageRoute(builder: (context) => Welcome()),
-                                                    // );
-                                                  },
-                                                  text: btnText('Apply'),
-                                                  height: 28,
-                                                  width: 80,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                          ),
                                         ),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              blackHeadingSmall(
+                                                  _allJibsController
+                                                      .foundJobs[index]
+                                                      .jobTitle),
+                                              TextSmallbold(_allJibsController
+                                                  .foundJobs[index]
+                                                  .companyName),
+                                              TextSmalllocation(
+                                                  _allJibsController
+                                                      .foundJobs[index]
+                                                      .location),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: screenWidth * 0.2,
+
+                                          ///height: screenHeight * 0.09,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  _homePageController
+                                                      .savejobssApi(
+                                                    _allJibsController
+                                                        .foundJobs[index].id
+                                                        .toString(),
+                                                  );
+                                                  print('job saved');
+                                                },
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          screenWidth * 0.0),
+                                                  child: Icon(
+                                                    Icons.save,
+                                                    color: Colors.indigo,
+                                                  ),
+                                                ),
+                                              ),
+                                              boldText(_allJibsController
+                                                  .foundJobs[index]
+                                                  .requiredExperience),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8),
+                                      child: greyTextSmall(
+                                        stripHtmlTags(_allJibsController
+                                                .foundJobs[index].skills ??
+                                            "No skills listed"),
                                       ),
-                                    );
-                                  })
-                              //_buildBody()
-                              ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        boldText("₹  ${packageText}"),
+                                        boldText(
+                                            "${_allJibsController.foundJobs[index].noofdays.toString()}"),
+                                        MyElevatedButton(
+                                          onPressed: () async {
+                                            isLoading.value = true;
+                                            SharedPreferences prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            prefs.setString(
+                                                "JobListId",
+                                                _allJibsController
+                                                    .foundJobs[index].id
+                                                    .toString());
+                                            print(
+                                                "sadsad${_allJibsController.foundJobs[index].id.toString()}");
+                                            await Future.delayed(
+                                                Duration(seconds: 0));
+                                            isLoading.value = false;
+                                            _homePageController.applyjobssApi(
+                                              _allJibsController
+                                                  .foundJobs[index].id
+                                                  .toString(),
+                                            );
+                                          },
+                                          text: btnText('Apply'),
+                                          height: 28,
+                                          width: 80,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                         ),
                 ),
                 Container(
@@ -1023,40 +1025,43 @@ class _HomeState extends State<Home> {
                           children: [
                             Spacer(),
 
-                            responsiveContainer(
-                              // padding: const EdgeInsets.only(right: 0),
-                              //height: 20,
-                              //width: 20,
-                              heightPortrait:
-                                  MediaQuery.of(context).size.height * 0.055,
-                              widthPortrait:
-                                  MediaQuery.of(context).size.width * 0.12,
-                              heightLandscape:
-                                  MediaQuery.of(context).size.height * 0.1,
-                              widthLandscape:
-                                  MediaQuery.of(context).size.width * 0.06,
-                              // height: MediaQuery.of(context).size.height *
-                              //     0.05, // 20% of screen height if not provided
-                              // width: MediaQuery.of(context).size.width * 0.09,
-                              child: category.companyImage != null
-                                  ? Image.network(
-                                      FixedText.imgurl +
-                                          category.companyImage.toString(),
-                                      //color: appColor,
-                                      fit: BoxFit.fill,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Image.asset(
-                                          'lib/assets/logo/noimageavlble.jpg',
-                                          fit: BoxFit.fill,
-                                        );
-                                      },
-                                    )
-                                  : Image.network(
-                                      'https://ih1.redbubble.net/image.5098928927.2456/flat,750x,075,f-pad,750x1000,f8f8f8.u2.jpg',
-                                      fit: BoxFit.fill,
-                                    ),
-                              context: context,
+                            GestureDetector(
+                              onTap: () {},
+                              child: responsiveContainer(
+                                // padding: const EdgeInsets.only(right: 0),
+                                //height: 20,
+                                //width: 20,
+                                heightPortrait:
+                                    MediaQuery.of(context).size.height * 0.055,
+                                widthPortrait:
+                                    MediaQuery.of(context).size.width * 0.12,
+                                heightLandscape:
+                                    MediaQuery.of(context).size.height * 0.1,
+                                widthLandscape:
+                                    MediaQuery.of(context).size.width * 0.06,
+                                // height: MediaQuery.of(context).size.height *
+                                //     0.05, // 20% of screen height if not provided
+                                // width: MediaQuery.of(context).size.width * 0.09,
+                                child: category.companyImage != null
+                                    ? Image.network(
+                                        FixedText.imgurl +
+                                            category.companyImage.toString(),
+                                        //color: appColor,
+                                        fit: BoxFit.fill,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Image.asset(
+                                            'lib/assets/logo/noimageavlble.jpg',
+                                            fit: BoxFit.fill,
+                                          );
+                                        },
+                                      )
+                                    : Image.network(
+                                        'https://ih1.redbubble.net/image.5098928927.2456/flat,750x,075,f-pad,750x1000,f8f8f8.u2.jpg',
+                                        fit: BoxFit.fill,
+                                      ),
+                                context: context,
+                              ),
                             ),
                             Spacer(),
                             responsiveText(

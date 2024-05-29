@@ -6,19 +6,26 @@ import 'package:hirejobindia/modules/all_pages/pages/applied_jobs.dart';
 import 'package:hirejobindia/modules/all_pages/pages/bookmark.dart';
 import 'package:hirejobindia/modules/all_pages/pages/categories.dart';
 import 'package:hirejobindia/modules/all_pages/pages/company.dart';
-import 'package:hirejobindia/modules/all_pages/pages/invite_friend.dart';
 import 'package:hirejobindia/modules/all_pages/pages/notification.dart';
 import 'package:hirejobindia/modules/all_pages/pages/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../controllers/home_page_controllerss/home_page_controllerss.dart';
 import '../controllers/login_controllers/login_controllersss.dart';
 import '../controllers/user_profile_controller/user_profile_controller.dart';
+import '../controllers/view_job_controller/aaplied_job_controller.dart';
+import '../controllers/view_job_controller/saved_job_controller.dart';
 import '../modules/all_pages/pages/login.dart';
+import '../modules/all_pages/pages/registration_test.dart';
 
 class NavBar extends StatelessWidget {
   NavBar({Key? key}) : super(key: key);
   LoginController _loginController = Get.put(LoginController());
   final ProfileController _profileController = Get.find();
+  AllSavedJobController _savedJobController = Get.put(AllSavedJobController());
+  AllAppliedJobController _allappliedController =
+      Get.put(AllAppliedJobController());
+  HomePageController _homePageController = Get.find();
 
   final snackBarDuration = Duration(seconds: 3); // Define your desired duration
 
@@ -47,7 +54,10 @@ class NavBar extends StatelessWidget {
                       child: ClipOval(
                         child: Padding(
                           padding: EdgeInsets.all(10),
-                          child: Image.asset('lib/assets/images/s3.jpg'),
+                          child: Image.asset(
+                            'lib/assets/logo/hirelogo11.png',
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
@@ -106,21 +116,26 @@ class NavBar extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.bookmark),
-              title: const Text('Bookmark'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Bookmark()));
+              leading: const Icon(Icons.save),
+              title: const Text('Saved Job'),
+              onTap: () async {
+                //navigator?.pop(context);
+
+                await _savedJobController.savedjobListApi();
+                _savedJobController.onInit();
+
+                await Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Bookmark()));
               },
             ),
             ListTile(
               leading: const Icon(Icons.done_all),
               title: const Text('Applied Jobs'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AppliedJobs()));
+              onTap: () async {
+                await _allappliedController.appliedjobListApi();
+                _allappliedController.onInit();
+                await Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AppliedJobs()));
               },
             ),
             ListTile(
@@ -149,8 +164,9 @@ class NavBar extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const InviteFriend()));
+                    MaterialPageRoute(builder: (context) => RegistrationPage()
+                        //InviteFriend()
+                        ));
               },
             ),
             ListTile(

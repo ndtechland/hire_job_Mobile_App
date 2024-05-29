@@ -4,30 +4,16 @@ import 'package:hirejobindia/models/saved_job_model.dart';
 import '../../models/all_jobs_model.dart';
 import '../../services_apis/api_servicesss.dart'; // Import your ApiProvider
 
-class AllJibsController extends GetxController {
+class AllSavedJobController extends GetxController {
   RxBool isLoading = true.obs;
   //List<AllJobsApiModel> allJobs = [];
 
-  AllJobsApiModel? allJobsApiModel;
   AllJobsSavedApiModel? savejobapimodel;
 
   final ApiProvider _apiProvider = ApiProvider(); // Use ApiProvider instance
   String searchQuery = "";
 
-  void jobListApi() async {
-    isLoading(true);
-    allJobsApiModel = await ApiProvider.AllJobsApi();
-    print('Prince doctor list');
-    print(allJobsApiModel);
-    if (allJobsApiModel != null) {
-      //Get.to(() => TotalPrice());
-      isLoading(false);
-      foundJobs.value = allJobsApiModel!.response!;
-      //Get.to(()=>Container());
-    }
-  }
-
-  void savedjobListApi() async {
+  Future<void> savedjobListApi() async {
     isLoading(true);
     savejobapimodel = await ApiProvider.AllSavedJobsApi();
     print('Prince doctor list');
@@ -40,28 +26,24 @@ class AllJibsController extends GetxController {
     }
   }
 
+  ///todo: delete job api....
+  void deleteJob(int jobId) async {
+    isLoading(true);
+    bool success = await ApiProvider.deleteJobApi(jobId);
+    isLoading(false);
+
+    if (success) {
+      foundSavedJobs.removeWhere((job) => job.id == jobId);
+      Get.snackbar('Success', 'Job deleted successfully');
+    } else {
+      Get.snackbar('Error', 'Failed to delete job');
+    }
+  }
+
   @override
   void onInit() {
     super.onInit();
-    jobListApi();
     savedjobListApi();
-  }
-
-  RxList<JobResponse> foundJobs = RxList<JobResponse>([]);
-  void filterDoctor(String searcjonName) {
-    List<JobResponse>? finalResult = [];
-    if (searcjonName.isEmpty) {
-      finalResult = allJobsApiModel!.response;
-    } else {
-      finalResult = allJobsApiModel!.response!
-          .where((element) => element.jobTitle
-              .toString()
-              .toLowerCase()
-              .contains(searcjonName.toString().toLowerCase().trim()))
-          .toList();
-    }
-    print(finalResult?.length);
-    foundJobs.value = finalResult!;
   }
 
   RxList<JobResponseSaved> foundSavedJobs = RxList<JobResponseSaved>([]);
