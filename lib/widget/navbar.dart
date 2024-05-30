@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../controllers/home_page_controllerss/home_page_controllerss.dart';
 import '../controllers/login_controllers/login_controllersss.dart';
+import '../controllers/registrationss/registration_controller.dart';
 import '../controllers/user_profile_controller/user_profile_controller.dart';
 import '../controllers/view_job_controller/aaplied_job_controller.dart';
 import '../controllers/view_job_controller/saved_job_controller.dart';
@@ -26,6 +27,8 @@ class NavBar extends StatelessWidget {
   AllAppliedJobController _allappliedController =
       Get.put(AllAppliedJobController());
   HomePageController _homePageController = Get.find();
+  final RegistrationController _registrationController =
+      Get.put(RegistrationController());
 
   final snackBarDuration = Duration(seconds: 3); // Define your desired duration
 
@@ -161,8 +164,13 @@ class NavBar extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.inventory_outlined),
               title: const Text('Invite Friend'),
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                _registrationController.getStatepi();
+                _registrationController.onInit();
+                _registrationController.selectedState.value = null;
+                await Future.delayed(Duration(milliseconds: 800));
+
+                await Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => RegistrationPage()
                         //InviteFriend()

@@ -2,10 +2,38 @@ import 'dart:typed_data';
 
 import 'package:get/get.dart';
 
+import '../../models/city_model.dart';
+import '../../models/state_model.dart';
+import '../../modules/all_pages/pages/login.dart';
 import '../../services_apis/api_servicesss.dart';
 
 class RegistrationController extends GetxController {
   final isLoading = false.obs;
+
+  var selectedGender = ''.obs;
+
+  Rx<CityModell?> selectedCity = (null as CityModell?).obs;
+  RxList<CityModell> cities = <CityModell>[].obs;
+
+  Rx<StateModelss?> selectedState = (null as StateModelss?).obs;
+  List<StateModelss> states = <StateModelss>[].obs;
+
+  //final selectedGender = Gender.male.obs; // Add observable for selected gender
+
+  onChangeShifts(String servicee) {
+    selectedGender.value = servicee;
+  }
+
+  void getStatepi() async {
+    states = await ApiProvider.getSatesApi();
+  }
+
+  ///get cities api...........
+  void getCityByStateID(String stateID) async {
+    cities.clear();
+    final localList = await ApiProvider.getCitiesApi(stateID);
+    cities.addAll(localList);
+  }
 
   Future<void> createProfile({
     required String fullName,
@@ -45,6 +73,7 @@ class RegistrationController extends GetxController {
 
       if (response.statusCode == 200) {
         print('Profile created successfully!');
+        Get.to(Login());
         print(response.body);
       } else {
         print('Error creating profile: ${response.statusCode}');
@@ -54,5 +83,22 @@ class RegistrationController extends GetxController {
     } finally {
       isLoading(false);
     }
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    getStatepi();
+    selectedState.listen((p0) {
+      if (p0 != null) {
+        getCityByStateID("${p0.id}");
+      }
+    });
+    //getNurseTypeApi();
+    // selectedState.listen((p0) {
+    //   // if (p0 != null) {
+    //   //   getCityByStateIDLab("${p0.id}");
+    //   // }
+    // });
   }
 }

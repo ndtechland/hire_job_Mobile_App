@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hirejobindia/components/styles.dart';
 import 'package:hirejobindia/modules/all_pages/pages/forgot_password.dart';
-import 'package:hirejobindia/modules/all_pages/pages/register.dart';
+import 'package:hirejobindia/modules/all_pages/pages/registration_test.dart';
 import 'package:hirejobindia/widget/elevated_button.dart';
 import 'package:hirejobindia/widget/text_btn.dart';
 
@@ -62,7 +62,7 @@ class Login extends StatelessWidget {
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty) {
-                                              return 'Please enter some text';
+                                              return 'Please enter username';
                                             }
                                             return null;
                                           },
@@ -76,7 +76,7 @@ class Login extends StatelessWidget {
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty) {
-                                              return 'Please enter some text';
+                                              return 'Please enter Your Password';
                                             }
                                             return null;
                                           },
@@ -151,9 +151,11 @@ class Login extends StatelessWidget {
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const Register(),
-                                                  ),
+                                                      builder: (context) =>
+                                                          RegistrationPage()
+                                                      //const
+                                                      //Register(),
+                                                      ),
                                                 );
                                               },
                                               colors: appColor,

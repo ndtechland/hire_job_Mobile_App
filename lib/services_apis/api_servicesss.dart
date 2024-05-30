@@ -12,9 +12,11 @@ import 'package:http_parser/http_parser.dart';
 
 import '../constants/static_text.dart';
 import '../models/all_jobs_model.dart';
+import '../models/city_model.dart';
 import '../models/company_model.dart';
 import '../models/profile_model.dart';
 import '../models/saved_job_model.dart';
+import '../models/state_model.dart';
 import '../models/testimonial_model.dart';
 import '../modules/all_pages/pages/home.dart';
 
@@ -767,6 +769,43 @@ class ApiProvider {
     var response = await request.send();
     return http.Response.fromStream(response);
   }
+
+  ///state api..
+  ///state Api get...........................
+  static Future<List<StateModelss>> getSatesApi() async {
+    var url = "${baseUrl}EmployeeApi/Getstate";
+    try {
+      http.Response r = await http.get(Uri.parse(url));
+      print(r.body.toString());
+      if (r.statusCode == 200) {
+        var statesData = stateModelFromJson(r.body);
+        return statesData.data;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      return [];
+    }
+  }
+
+  ///todo: city by stste id...
+  static Future<List<CityModell>> getCitiesApi(String stateID) async {
+    var url = "${baseUrl}EmployeeApi/getcity?stateid=$stateID";
+    try {
+      http.Response r = await http.get(Uri.parse(url));
+      print(r.body.toString());
+      if (r.statusCode == 200) {
+        var citiesData = cityModelFromJson(r.body);
+        return citiesData.data;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      return [];
+    }
+  }
+
+  ///
 }
 
 ///todo: device  user token for user........
