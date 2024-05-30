@@ -299,7 +299,7 @@ class _HomeState extends State<Home> {
                   () => (_allJibsController.isLoading.value || isLoading.value)
                       ? Center(child: CircularProgressIndicator())
                       : SingleChildScrollView(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          padding: EdgeInsets.symmetric(vertical: 8),
                           child: ListView.builder(
                             shrinkWrap: true,
                             physics: const ScrollPhysics(),

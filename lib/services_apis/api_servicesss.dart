@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +8,7 @@ import 'package:hirejobindia/models/all_catagary.dart';
 import 'package:hirejobindia/models/applied_job_model.dart';
 import 'package:hirejobindia/modules/all_pages/pages/bookmark.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 import '../constants/static_text.dart';
 import '../models/all_jobs_model.dart';
@@ -720,21 +722,50 @@ class ApiProvider {
   }
 
   ///registration....
-  static Future<http.Response> createProfile(
-      Map<String, dynamic> formData) async {
-    const String apiUrl =
-        'https://api.hirejobindia.com/api/Login/createProfile';
+  // static Future<http.Response> createProfile(
+  //     Map<String, dynamic> formData) async {
+  //   const String apiUrl =
+  //       'https://api.hirejobindia.com/api/Login/createProfile';
+  //
+  //   try {
+  //     final http.Response response = await http.post(
+  //       Uri.parse(apiUrl),
+  //       body: formData,
+  //     );
+  //     print("data${formData}");
+  //
+  //     return response;
+  //   } catch (error) {
+  //     throw Exception('Failed to create profile: $error');
+  //   }
+  // }
 
-    try {
-      final http.Response response = await http.post(
-        Uri.parse(apiUrl),
-        body: formData,
-      );
+  ///
+  static const String apiUrl =
+      'https://api.hirejobindia.com/api/Login/createProfile';
 
-      return response;
-    } catch (error) {
-      throw Exception('Failed to create profile: $error');
-    }
+  static Future<http.Response> createProfile(Map<String, String> formData,
+      Uint8List cvFileContent, String cvFileName) async {
+    var uri = Uri.parse(apiUrl);
+    var request = http.MultipartRequest('POST', uri);
+
+    // Add form fields
+    formData.forEach((key, value) {
+      request.fields[key] = value;
+    });
+
+    // Add file field
+    request.files.add(http.MultipartFile.fromBytes(
+      'CVFileName', // The name of the file field
+      cvFileContent,
+      filename: cvFileName, // Use the file name from the parameter
+      contentType:
+          MediaType('application', 'pdf'), // Use MediaType from http_parser
+    ));
+
+    // Send the request
+    var response = await request.send();
+    return http.Response.fromStream(response);
   }
 }
 

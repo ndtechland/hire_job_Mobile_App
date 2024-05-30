@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:get/get.dart';
 
 import '../../services_apis/api_servicesss.dart';
@@ -6,8 +8,8 @@ class RegistrationController extends GetxController {
   final isLoading = false.obs;
 
   Future<void> createProfile({
-    required String FullName,
-    required String EmailID,
+    required String fullName,
+    required String emailID,
     required String password,
     required String mobileNumber,
     required String experience,
@@ -17,48 +19,37 @@ class RegistrationController extends GetxController {
     required String dateOfBirth,
     required String address,
     required String pincode,
-    required String cvFilePath,
+    required Uint8List cvFileContent,
+    required String cvFileName, // Add this parameter
   }) async {
     try {
       isLoading(true);
 
-      final Map<String, dynamic> formData = {
-        'FullName': FullName,
-        'EmailID': EmailID,
+      final Map<String, String> formData = {
+        'FullName': fullName,
+        'EmailID': emailID,
         'Password': password,
         'MobileNumber': mobileNumber,
         'Experience': experience,
         'StateId': stateId,
         'CityId': cityId,
         'GenderName': genderName,
-        'Dateofbirth':
-            //"2024-05-24T00:00:00",
-            dateOfBirth,
+        'Dateofbirth': dateOfBirth,
         'Address': address,
         'Pincode': pincode,
       };
 
-      // Perform file upload here, and add the CV file to the form data
-      // For simplicity, I'm assuming cvFilePath is the file path of the CV file
-
-      // Add CV file to formData
-      formData['CVFileName'] = cvFilePath;
-
       // Make API call
-      final response = await ApiProvider.createProfile(formData);
-      print("kdsdf");
-
-      print(formData);
+      final response =
+          await ApiProvider.createProfile(formData, cvFileContent, cvFileName);
 
       if (response.statusCode == 200) {
-        // Handle success
         print('Profile created successfully!');
+        print(response.body);
       } else {
-        // Handle error
         print('Error creating profile: ${response.statusCode}');
       }
     } catch (error) {
-      // Handle network errors
       print('Network error: $error');
     } finally {
       isLoading(false);
