@@ -1,17 +1,29 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hirejobindia/components/responsive_text.dart';
 import 'package:hirejobindia/components/styles.dart';
-import 'package:hirejobindia/widget/navbar.dart';
+import 'package:hirejobindia/modules/all_pages/pages/edit_profile.dart';
+import 'package:hirejobindia/modules/all_pages/pages/view_pdf_only.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
-class Profile extends StatefulWidget {
-  static const String id = 'Profile';
+import '../../../controllers/user_profile_controller/user_profile_controller.dart';
+import '../../../models/profile_model.dart';
+import 'home.dart';
 
-  const Profile({Key? key}) : super(key: key);
+class Profile extends StatelessWidget {
+  final ProfileController _getprofilee = Get.put(ProfileController());
 
-  @override
-  _ProfileState createState() => _ProfileState();
-}
+  // static const String id = 'Profile';
 
-class _ProfileState extends State<Profile> {
+  Profile({Key? key}) : super(key: key);
+  GetProfileModel? getprofileModel;
+
   int selectID = 1;
   String dropdownValueDay = '2';
   String dropdownValueMonth = 'July';
@@ -19,373 +31,585 @@ class _ProfileState extends State<Profile> {
   String dropdownValueCountry = 'India';
   String dropdownValueZip = '110096';
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  // final TextEditingController _nameController = TextEditingController(
+  //     // text: _getprofilee.getprofileModel.response.fullName
+  //     );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: NavBar(),
-        extendBodyBehindAppBar: true,
-        backgroundColor: backgroundColor,
-        // appBar: AppBar(
-        //   backgroundColor: Colors.transparent,
-        //   iconTheme: const IconThemeData(color: Colors.white),
-        //   title: const Text('Profile'),
-        //   centerTitle: true,
-        //   elevation: 0,
-        // ),
-        body: _buildBody());
-  }
-
-  Widget _buildBody() {
-    return SingleChildScrollView(
-        child: Column(
-      children: [
-        _buildHeader(),
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              blackHeadingSmall('Basic Informations'.toUpperCase()),
-              GestureDetector(onTap: () {}, child: appcolorText('Edit'))
-            ],
-          ),
-        ),
-        Container(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-            margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 20.0,
-                ),
-              ],
-              borderRadius: BorderRadius.all(Radius.circular(6.0)),
-            ),
-            child: Column(
-              children: [
-                textFieldNo('Full Name'),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      extendBodyBehindAppBar: true,
+      backgroundColor: backgroundColor,
+      body: Obx(
+        () => (_getprofilee.isLoading.value)
+            ? Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                child: Column(
                   children: [
-                    const SizedBox(height: 10),
-                    greyTextSmall('Gender'),
+                    _buildHeader(context),
                     const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildSelect('Male', 1),
-                        _buildSelect('Female', 2),
-                      ],
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          blackHeadingSmall('Basic Informations'.toUpperCase()),
+                          GestureDetector(
+                              onTap: () {}, child: appcolorText('Edit'))
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    greyTextSmall('Date of Birth'),
-                    Row(
-                      children: [
-                        Expanded(
-                            child: DropdownButton<String>(
-                          value: dropdownValueDay,
-                          icon: const Icon(Icons.arrow_drop_down),
-                          style: const TextStyle(color: Colors.black87),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              dropdownValueDay = newValue!;
-                            });
-                          },
-                          items: <String>['1', '2', '3', '4']
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        )),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: DropdownButton<String>(
-                            value: dropdownValueMonth,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                dropdownValueMonth = newValue!;
-                              });
-                            },
-                            items: <String>[
-                              'January',
-                              'February',
-                              'March',
-                              'April',
-                              'May',
-                              'June',
-                              'July',
-                              'August',
-                              'September',
-                              'October',
-                              'November',
-                              'December'
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value.toUpperCase(),
-                                  style: TextStyle(fontSize: 11),
-                                ), // Capitalize the text here
-                              );
-                            }).toList(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 16),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 16),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 20.0,
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                            child: DropdownButton<String>(
-                          value: dropdownValueYear,
-                          icon: const Icon(Icons.arrow_drop_down),
-                          style: const TextStyle(color: Colors.black87),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              dropdownValueYear = newValue!;
-                            });
-                          },
-                          items: <String>[
-                            '1990',
-                            '1991',
-                            '1992',
-                            '1993',
-                            '1994',
-                            '1995',
-                            '1996',
-                            '1997'
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        )),
-                      ],
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                      ),
+                      child: Column(
+                        children: [
+                          responsiveContainer2(
+                            heightPortrait:
+                                MediaQuery.of(context).size.height * 0.055,
+                            widthPortrait: MediaQuery.of(context).size.width,
+                            heightLandscape:
+                                MediaQuery.of(context).size.height * 0.09,
+                            widthLandscape: MediaQuery.of(context).size.width,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Name:",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'medium',
+                                        color: Colors.grey.shade600),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "${_getprofilee.getprofileModel?.response?.fullName}",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'medium',
+                                        color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            context: context,
+                          ),
+                          Divider(
+                            color: appColor,
+                          ),
+
+                          ///
+                          responsiveContainer2(
+                            heightPortrait:
+                                MediaQuery.of(context).size.height * 0.055,
+                            widthPortrait: MediaQuery.of(context).size.width,
+                            heightLandscape:
+                                MediaQuery.of(context).size.height * 0.09,
+                            widthLandscape: MediaQuery.of(context).size.width,
+                            // height: MediaQuery.of(context).size.height *
+                            //     0.05, // 20% of screen height if not provided
+                            // width: MediaQuery.of(context).size.width * 0.09,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Email:",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'medium',
+                                        color: Colors.grey.shade600),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "${_getprofilee.getprofileModel?.response?.emailId}",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'medium',
+                                        color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            context: context,
+                          ),
+                          Divider(
+                            color: appColor,
+                          ),
+
+                          ///
+                          responsiveContainer2(
+                            heightPortrait:
+                                MediaQuery.of(context).size.height * 0.055,
+                            widthPortrait: MediaQuery.of(context).size.width,
+                            heightLandscape:
+                                MediaQuery.of(context).size.height * 0.09,
+                            widthLandscape: MediaQuery.of(context).size.width,
+                            // height: MediaQuery.of(context).size.height *
+                            //     0.05, // 20% of screen height if not provided
+                            // width: MediaQuery.of(context).size.width * 0.09,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Phone:",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'medium',
+                                        color: Colors.grey.shade600),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "${_getprofilee.getprofileModel?.response?.mobileNumber}",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'medium',
+                                        color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            context: context,
+                          ),
+                          Divider(
+                            color: appColor,
+                          ),
+
+                          ///
+                          responsiveContainer2(
+                            heightPortrait:
+                                MediaQuery.of(context).size.height * 0.055,
+                            widthPortrait: MediaQuery.of(context).size.width,
+                            heightLandscape:
+                                MediaQuery.of(context).size.height * 0.09,
+                            widthLandscape: MediaQuery.of(context).size.width,
+                            // height: MediaQuery.of(context).size.height *
+                            //     0.05, // 20% of screen height if not provided
+                            // width: MediaQuery.of(context).size.width * 0.09,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "DOB:",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'medium',
+                                        color: Colors.grey.shade600),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "${_getprofilee.getprofileModel?.response?.dateofbirth}",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'medium',
+                                        color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            context: context,
+                          ),
+                          Divider(
+                            color: appColor,
+                          ),
+
+                          ///
+
+                          const SizedBox(height: 10),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-                textFieldNo('Phone Number'),
-                textFieldNo('Email Address'),
-                const SizedBox(height: 10),
-              ],
-            )),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              blackHeadingSmall('Location'.toUpperCase()),
-              GestureDetector(onTap: () {}, child: appcolorText('Edit'))
-            ],
-          ),
-        ),
-        Container(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-            margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 20.0,
-                ),
-              ],
-              borderRadius: BorderRadius.all(Radius.circular(6.0)),
-            ),
-            child: Column(
-              children: [
-                textFieldNo('Home Address'),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          blackHeadingSmall('Location'.toUpperCase()),
+                          GestureDetector(
+                              onTap: () {}, child: appcolorText('Edit'))
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 16),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 16),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 20.0,
+                          ),
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                      ),
+                      child: Column(
+                        children: [
+                          responsiveContainer2(
+                            heightPortrait:
+                                MediaQuery.of(context).size.height * 0.055,
+                            widthPortrait: MediaQuery.of(context).size.width,
+                            heightLandscape:
+                                MediaQuery.of(context).size.height * 0.09,
+                            widthLandscape: MediaQuery.of(context).size.width,
+                            // height: MediaQuery.of(context).size.height *
+                            //     0.05, // 20% of screen height if not provided
+                            // width: MediaQuery.of(context).size.width * 0.09,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "State:",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'medium',
+                                        color: Colors.grey.shade600),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  responsiveText(
+                                    text:
+                                        "${_getprofilee.getprofileModel?.response?.stateName}",
+                                    fontSizeLandscape:
+                                        MediaQuery.of(context).size.height *
+                                            0.03,
+                                    fontSizePortrait:
+                                        MediaQuery.of(context).size.height *
+                                            0.016,
+                                    // style: TextStyle(
+                                    //     fontSize: 12,
+                                    //     fontFamily: 'medium',
+                                    //     color: Colors.black),
+                                    context: context,
+                                    //text: '',
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            context: context,
+                          ),
+                          Divider(
+                            color: appColor,
+                          ),
+                          responsiveContainer2(
+                            heightPortrait:
+                                MediaQuery.of(context).size.height * 0.055,
+                            widthPortrait: MediaQuery.of(context).size.width,
+                            heightLandscape:
+                                MediaQuery.of(context).size.height * 0.09,
+                            widthLandscape: MediaQuery.of(context).size.width,
+                            // height: MediaQuery.of(context).size.height *
+                            //     0.05, // 20% of screen height if not provided
+                            // width: MediaQuery.of(context).size.width * 0.09,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "City:",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'medium',
+                                        color: Colors.grey.shade600),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  responsiveText(
+                                    text:
+                                        "${_getprofilee.getprofileModel?.response?.cityName}",
+                                    fontSizeLandscape:
+                                        MediaQuery.of(context).size.height *
+                                            0.03,
+                                    fontSizePortrait:
+                                        MediaQuery.of(context).size.height *
+                                            0.016,
+                                    // style: TextStyle(
+                                    //     fontSize: 12,
+                                    //     fontFamily: 'medium',
+                                    //     color: Colors.black),
+                                    context: context,
+                                    //text: '',
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            context: context,
+                          ),
+                          Divider(
+                            color: appColor,
+                          ),
+                          responsiveContainer2(
+                            heightPortrait:
+                                MediaQuery.of(context).size.height * 0.055,
+                            widthPortrait: MediaQuery.of(context).size.width,
+                            heightLandscape:
+                                MediaQuery.of(context).size.height * 0.09,
+                            widthLandscape: MediaQuery.of(context).size.width,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Address:",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'medium',
+                                        color: Colors.grey.shade600),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  responsiveText(
+                                    text:
+                                        "${_getprofilee.getprofileModel?.response?.address}",
+                                    fontSizeLandscape:
+                                        MediaQuery.of(context).size.height *
+                                            0.03,
+                                    fontSizePortrait:
+                                        MediaQuery.of(context).size.height *
+                                            0.016,
+                                    // style: TextStyle(
+                                    //     fontSize: 12,
+                                    //     fontFamily: 'medium',
+                                    //     color: Colors.black),
+                                    context: context,
+                                    //text: '',
+                                  ),
+                                ],
+                              ),
+                            ),
+                            context: context,
+                          ),
+                          Divider(
+                            color: appColor,
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+
+                    ///education
+                    // Container(
+                    //   padding: const EdgeInsets.symmetric(
+                    //       horizontal: 16, vertical: 16),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       blackHeadingSmall('Education'.toUpperCase()),
+                    //       GestureDetector(
+                    //           onTap: () {}, child: appcolorText('Edit'))
+                    //     ],
+                    //   ),
+                    // ),
+                    // Container(
+                    //   padding: const EdgeInsets.symmetric(
+                    //       vertical: 0, horizontal: 16),
+                    //   margin: const EdgeInsets.symmetric(
+                    //       vertical: 0, horizontal: 16),
+                    //   decoration: const BoxDecoration(
+                    //     color: Colors.white,
+                    //     boxShadow: [
+                    //       BoxShadow(
+                    //         color: Colors.black12,
+                    //         blurRadius: 20.0,
+                    //       ),
+                    //     ],
+                    //     borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                    //   ),
+                    //   child: Column(
+                    //     children: [
+                    //       textFieldNo('College'),
+                    //       textFieldNo('High School Degree'),
+                    //       textFieldNo('Higher Secondary Education'),
+                    //       const SizedBox(height: 10),
+                    //     ],
+                    //   ),
+                    // ),
+                    ///education end
+                    ///
+                    /// skills
+                    // Container(
+                    //   padding: const EdgeInsets.symmetric(
+                    //       horizontal: 16, vertical: 16),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       blackHeadingSmall('Skills'.toUpperCase()),
+                    //       GestureDetector(
+                    //           onTap: () {}, child: appcolorText('Edit'))
+                    //     ],
+                    //   ),
+                    // ),
+                    // Container(
+                    //   width: double.infinity,
+                    //   padding: const EdgeInsets.symmetric(
+                    //       vertical: 16, horizontal: 16),
+                    //   margin: const EdgeInsets.symmetric(
+                    //       vertical: 0, horizontal: 16),
+                    //   decoration: const BoxDecoration(
+                    //     color: Colors.white,
+                    //     boxShadow: [
+                    //       BoxShadow(
+                    //         color: Colors.black12,
+                    //         blurRadius: 20.0,
+                    //       ),
+                    //     ],
+                    //     borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                    //   ),
+                    //   child: Wrap(
+                    //     children: [
+                    //       _buildSkils('Flutter'),
+                    //       _buildSkils('React'),
+                    //       _buildSkils('Kotlin'),
+                    //       _buildSkils('.Net'),
+                    //       _buildSkils('Java'),
+                    //       _buildSkils('Python'),
+                    //       _buildSkils('PHP'),
+                    //     ],
+                    //   ),
+                    // ),
+                    ///skills end..
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          blackHeadingSmall('My Resume'.toUpperCase()),
+                          GestureDetector(
+                              onTap: () {}, child: appcolorText('Edit'))
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 16),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 16),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 20.0,
+                          ),
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(6.0)),
+                      ),
+                      child: Row(
+                        children: [
+                          Image.asset('lib/assets/images/c3.png',
+                              width: 40, height: 40, color: Colors.black38),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                boldText(
+                                    "${_getprofilee.getprofileModel?.response?.fullName}"),
+                                //boldText('Kumar Prince CV'),
+
+                                responsiveText2(
+                                  text:
+                                      "${_getprofilee.getprofileModel?.response?.resumeFilePath}",
+                                  fontSizeLandscape:
+                                      MediaQuery.of(context).size.height * 0.03,
+                                  fontSizePortrait:
+                                      MediaQuery.of(context).size.height *
+                                          0.016,
+                                  // style: TextStyle(
+                                  //     fontSize: 12,
+                                  //     fontFamily: 'medium',
+                                  //     color: Colors.black),
+                                  context: context,
+                                  //text: '',
+                                ),
+
+                                //urlname
+                              ],
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              await _getprofilee.profileApi();
+                              _getprofilee.update();
+                              final String? url = _getprofilee
+                                  .getprofileModel?.response?.resumeFilePath
+                                  .toString();
+
+                              // const url = "https://api.hirejobindia.com/ProfileUploadCV/f09dd832-7b4b-47a0-aec7-1ceff12f068620240530124324724.pdf";
+                              final file = await loadPdfFromNetwork(url!);
+                              openPdf(context, file, url);
+
+                              ///
+                              // await Get.to(() => PdfViewerrr(
+                              //     // remotePDFpath:"${_getprofilee.getprofileModel?.response?.resumeFilePath}"
+                              //     ));
+                              ///
+                              // PDFScreen(
+                              // path:
+                              //     'https://api.hirejobindia.com/ProfileUploadCV/f09dd832-7b4b-47a0-aec7-1ceff12f068620240530124324724.pdf'));
+                              ///
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => PdfViewScreen(
+                              //         pdfUrl:
+                              //             "${_getprofilee.getprofileModel?.response?.resumeFilePath}"),
+                              //   ),
+                              // );
+                            },
+                            child: Icon(Icons.document_scanner_sharp,
+                                size: 23, color: appColor2),
+                          )
+                        ],
+                      ),
+                    ),
                     const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Expanded(child: greyTextSmall('Country')),
-                        const SizedBox(width: 10),
-                        Expanded(child: greyTextSmall('Zip Code'))
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                            child: DropdownButton<String>(
-                          value: dropdownValueCountry,
-                          icon: const Icon(Icons.arrow_drop_down),
-                          style: const TextStyle(color: Colors.black87),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              dropdownValueCountry = newValue!;
-                            });
-                          },
-                          items: <String>[
-                            'India',
-                            'Nepal',
-                            'Bhutan',
-                            'USA',
-                            'Russia',
-                            'Canada'
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        )),
-                        const SizedBox(width: 10),
-                        Expanded(
-                            child: DropdownButton<String>(
-                          value: dropdownValueZip,
-                          icon: const Icon(Icons.arrow_drop_down),
-                          style: const TextStyle(color: Colors.black87),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              dropdownValueZip = newValue!;
-                            });
-                          },
-                          items: <String>[
-                            '110096',
-                            '110094',
-                            '445005',
-                            '452322'
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        )),
-                      ],
-                    ),
                   ],
                 ),
-                const SizedBox(height: 10),
-              ],
-            )),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              blackHeadingSmall('Education'.toUpperCase()),
-              GestureDetector(onTap: () {}, child: appcolorText('Edit'))
-            ],
-          ),
-        ),
-        Container(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-            margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 20.0,
-                ),
-              ],
-              borderRadius: BorderRadius.all(Radius.circular(6.0)),
-            ),
-            child: Column(
-              children: [
-                textFieldNo('Collage'),
-                textFieldNo('High School Degree'),
-                textFieldNo('Higher Secondary Education'),
-                const SizedBox(height: 10),
-              ],
-            )),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              blackHeadingSmall('Skills'.toUpperCase()),
-              GestureDetector(onTap: () {}, child: appcolorText('Edit'))
-            ],
-          ),
-        ),
-        Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-            margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 20.0,
-                ),
-              ],
-              borderRadius: BorderRadius.all(Radius.circular(6.0)),
-            ),
-            child: Wrap(
-              children: [
-                _buildSkils('Flutter'),
-                _buildSkils('React'),
-                _buildSkils('Kotlin'),
-                _buildSkils('.Net'),
-                _buildSkils('Java'),
-                _buildSkils('Python'),
-                _buildSkils('PHP'),
-              ],
-            )),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              blackHeadingSmall('My Resume'.toUpperCase()),
-              GestureDetector(onTap: () {}, child: appcolorText('Edit'))
-            ],
-          ),
-        ),
-        Container(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-            margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 20.0,
-                ),
-              ],
-              borderRadius: BorderRadius.all(Radius.circular(6.0)),
-            ),
-            child: Row(
-              children: [
-                Image.asset('lib/assets/images/c3.png',
-                    width: 40, height: 40, color: Colors.black38),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      boldText('Kumar Prince CV'),
-                      greyTextSmall('lib/Updated on 20 Jan 2024')
-                    ],
-                  ),
-                ),
-                const Icon(Icons.more_vert, size: 18, color: Colors.black38)
-              ],
-            )),
-        const SizedBox(height: 20)
-      ],
-    ));
+              ),
+      ),
+    );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 0),
         width: double.infinity,
@@ -402,9 +626,10 @@ class _ProfileState extends State<Profile> {
               children: [
                 IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Get.to(Home());
+                      // Navigator.pop(context);
                     },
-                    icon: const Icon(Icons.menu, color: Colors.white)),
+                    icon: const Icon(Icons.arrow_back, color: Colors.white)),
                 const Expanded(
                   child: Center(
                     child: Text(
@@ -416,80 +641,117 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 40)
+                const SizedBox(width: 0),
+                IconButton(
+                    onPressed: () {
+                      Get.to(EditProfile());
+                      // Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.edit, color: Colors.white)),
               ],
             ),
-            const CircleAvatar(
-              backgroundImage: AssetImage('lib/assets/images/p2.jpg'),
-              radius: 40,
+            CircleAvatar(
+              radius: 45,
+              backgroundColor: Colors.white,
+              child: ClipOval(
+                child: responsiveContainer(
+                  // padding: const EdgeInsets.only(right: 0),
+                  //height: 20,
+                  //width: 20,
+                  heightPortrait: MediaQuery.of(context).size.height * 0.12,
+                  widthPortrait: MediaQuery.of(context).size.width * 0.25,
+                  heightLandscape: MediaQuery.of(context).size.height * 0.3,
+                  widthLandscape: MediaQuery.of(context).size.width * 0.2,
+                  // height: MediaQuery.of(context).size.height *
+                  //     0.05, // 20% of screen height if not provided
+                  // width: MediaQuery.of(context).size.width * 0.09,
+                  child: _getprofilee.getprofileModel?.response!.profileImage !=
+                          null
+                      ? Image.network(
+                          "${_getprofilee.getprofileModel?.response!.profileImage.toString()}",
+                          //color: appColor,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'lib/assets/logo/hirelogo11.png',
+                              fit: BoxFit.fill,
+                            );
+                          },
+                        )
+                      : Image.network(
+                          'https://ih1.redbubble.net/image.5098928927.2456/flat,750x,075,f-pad,750x1000,f8f8f8.u2.jpg',
+                          fit: BoxFit.fill,
+                        ),
+                  context: context,
+                ),
+              ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Kavi Singh',
+            Text(
+              "${_getprofilee.getprofileModel?.response!.fullName.toString()}",
               style: TextStyle(
                   fontSize: 18, fontFamily: 'medium', color: Colors.white),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'kavi@princeltd.com',
+            Text(
+              "${_getprofilee.getprofileModel?.response!.emailId.toString()}",
               style: TextStyle(fontSize: 14, color: Colors.white),
             ),
             const SizedBox(height: 10),
-            SizedBox(
-              width: 120,
-              child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                      primary: backgroundColor,
-                      shadowColor: Colors.black38,
-                      onPrimary: Colors.black,
-                      elevation: 0,
-                      shape: (RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
-                      )),
-                      padding: const EdgeInsets.all(0)),
-                  child: greyTextSmall('My Resume'.toUpperCase())),
-            ),
+            // SizedBox(
+            //   width: 120,
+            //   child: ElevatedButton(
+            //       onPressed: () {},
+            //       style: ElevatedButton.styleFrom(
+            //           primary: backgroundColor,
+            //           shadowColor: Colors.black38,
+            //           onPrimary: Colors.black,
+            //           elevation: 0,
+            //           shape: (RoundedRectangleBorder(
+            //             borderRadius: BorderRadius.circular(6),
+            //           )),
+            //           padding: const EdgeInsets.all(0)),
+            //       child: greyTextSmall('My Resume'.toUpperCase())),
+            // ),
           ],
         ));
   }
 
-  Widget _buildSelect(title, id) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectID = id;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 50),
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black12),
-          color: selectID == id ? appColor : Colors.transparent,
-          borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-        ),
-        child: Text(title,
-            style: TextStyle(
-                fontFamily: 'medium',
-                fontSize: 14,
-                color: selectID == id ? Colors.white : Colors.black54)),
-      ),
+  ///pdf:downlload...
+  Future<File?> pickFile() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
     );
+    if (result == null) return null;
+    return File(result.paths.first ?? '');
   }
 
-  Widget _buildSkils(val) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      margin: const EdgeInsets.only(right: 10, bottom: 10),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: <Color>[appColor2, appColor]),
-        borderRadius: BorderRadius.all(Radius.circular(4.0)),
+  Future<File> loadPdfFromNetwork(String url) async {
+    final response = await http.get(Uri.parse(url));
+    final bytes = response.bodyBytes;
+    return _storeFile(url, bytes);
+  }
+
+  Future<File> _storeFile(String url, List<int> bytes) async {
+    final filename = basename(url);
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/$filename');
+    await file.writeAsBytes(bytes, flush: true);
+    if (kDebugMode) {
+      print('$file');
+    }
+    return file;
+  }
+
+  void openPdf(BuildContext context, File file, String url) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PdfViewerPage(
+          file: file,
+          url: url,
+        ),
       ),
-      child: btnText(val),
     );
   }
 }

@@ -7,9 +7,9 @@ import 'package:hirejobindia/modules/all_pages/pages/bookmark.dart';
 import 'package:hirejobindia/modules/all_pages/pages/categories.dart';
 import 'package:hirejobindia/modules/all_pages/pages/company.dart';
 import 'package:hirejobindia/modules/all_pages/pages/notification.dart';
-import 'package:hirejobindia/modules/all_pages/pages/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../components/responsive_text.dart';
 import '../controllers/home_page_controllerss/home_page_controllerss.dart';
 import '../controllers/login_controllers/login_controllersss.dart';
 import '../controllers/registrationss/registration_controller.dart';
@@ -17,6 +17,7 @@ import '../controllers/user_profile_controller/user_profile_controller.dart';
 import '../controllers/view_job_controller/aaplied_job_controller.dart';
 import '../controllers/view_job_controller/saved_job_controller.dart';
 import '../modules/all_pages/pages/login.dart';
+import '../modules/all_pages/pages/profile.dart';
 import '../modules/all_pages/pages/registration_test.dart';
 
 class NavBar extends StatelessWidget {
@@ -52,15 +53,43 @@ class NavBar extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CircleAvatar(
-                      radius: 40,
+                      radius: 45,
                       backgroundColor: Colors.white,
                       child: ClipOval(
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Image.asset(
-                            'lib/assets/logo/hirelogo11.png',
-                            fit: BoxFit.cover,
-                          ),
+                        child: responsiveContainer(
+                          // padding: const EdgeInsets.only(right: 0),
+                          //height: 20,
+                          //width: 20,
+                          heightPortrait:
+                              MediaQuery.of(context).size.height * 0.12,
+                          widthPortrait:
+                              MediaQuery.of(context).size.width * 0.25,
+                          heightLandscape:
+                              MediaQuery.of(context).size.height * 0.3,
+                          widthLandscape:
+                              MediaQuery.of(context).size.width * 0.2,
+                          // height: MediaQuery.of(context).size.height *
+                          //     0.05, // 20% of screen height if not provided
+                          // width: MediaQuery.of(context).size.width * 0.09,
+                          child: _profileController.getprofileModel?.response!
+                                      .profileImage !=
+                                  null
+                              ? Image.network(
+                                  "${_profileController.getprofileModel?.response!.profileImage.toString()}",
+                                  //color: appColor,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Image.asset(
+                                      'lib/assets/logo/hirelogo11.png',
+                                      fit: BoxFit.fill,
+                                    );
+                                  },
+                                )
+                              : Image.network(
+                                  'https://ih1.redbubble.net/image.5098928927.2456/flat,750x,075,f-pad,750x1000,f8f8f8.u2.jpg',
+                                  fit: BoxFit.fill,
+                                ),
+                          context: context,
                         ),
                       ),
                     ),
@@ -105,8 +134,10 @@ class NavBar extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('View Profile'),
-              onTap: () {
-                Navigator.push(context,
+              onTap: () async {
+                await _profileController.profileApi();
+                _profileController.update();
+                await Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Profile()));
               },
             ),

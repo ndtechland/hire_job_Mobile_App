@@ -38,6 +38,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   file_picker: ^5.3.1
   http_parser:
+  fluttertoast:
+  flutter_local_notifications: ^17.1.2
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +88,9 @@ dev_dependencies:
   google_maps_flutter: ^2.1.2
   change_app_package_name: ^1.0.0
   carousel_slider: ^4.1.1
+  flutter_pdfview:
+  flutter_downloader:
+  open_file: ^3.2.1
 
 
 flutter_icons:

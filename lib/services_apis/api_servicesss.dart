@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hirejobindia/models/all_catagary.dart';
@@ -38,10 +39,11 @@ class ApiProvider {
   //static String catid = '';
   //static String productid = '';
   //static String orderid = '';
-  static String Id = '';
+  ///static String Id = '';
   static String MedicineId = ''.toString();
   static String adminId = ''.toString();
-  static String userid = ''.toString();
+  //static String userid = ''.toString();
+  static String userId = ''.toString();
 
   final box = GetStorage();
 
@@ -49,353 +51,109 @@ class ApiProvider {
   /// TODO: from here user 1 section...........
   ///
   //user signup..............
+  static String apiUrl = "${baseUrl}Login/createProfile";
 
-  //login user api ps welness api 1..................................
+  static Future<http.Response> createProfile(Map<String, String> formData,
+      Uint8List cvFileContent, String cvFileName) async {
+    var uri = Uri.parse(apiUrl);
+    var request = http.MultipartRequest('POST', uri);
 
-  static UserSignUpApi(
-    var PatientName,
-    var EmailId,
-    var MobileNumber,
-    var Password,
-    var State,
-    var City,
-    var Address,
-    var Pincode,
-  ) async {
-    //var a= int.parse(State).toString();
-    //var b= int.parse(City).toString();
-    var url = '${baseUrl}api/PatientApi/PatientRegistration';
-    var body = {
-      "PatientName": PatientName,
-      "EmailId": EmailId,
-      "MobileNumber": MobileNumber,
-      "Password": Password,
-      "State": State,
-      "City": City,
-      "Address": Address,
-      "Pincode": Pincode,
-    };
+    // Add form fields
+    formData.forEach((key, value) {
+      request.fields[key] = value;
+    });
 
-    // print(body);
+    // Add file field
+    request.files.add(http.MultipartFile.fromBytes(
+      'CVFileName', // The name of the file field
+      cvFileContent,
+      filename: cvFileName, // Use the file name from the parameter
+      contentType:
+          MediaType('application', 'pdf'), // Use MediaType from http_parser
+    ));
 
-    http.Response r = await http.post(
-      Uri.parse(url), body: body,
-      //headers: headers
-    );
-    // print(r.body);
-    if (r.statusCode == 200) {
-      print(r.body);
+    // Send the request
+    var response = await request.send();
 
-      return r;
-    } else if (r.statusCode == 401) {
-      Get.snackbar('message', r.body);
-    } else {
-      Get.snackbar('Error', r.body);
-      return r;
-    }
-  }
+    // Parse the response
+    var httpResponse = await http.Response.fromStream(response);
+    if (httpResponse.statusCode == 200) {
+      // Assuming the response body contains the user ID in JSON format
+      var jsonResponse = jsonDecode(httpResponse.body);
+      var userId = jsonResponse['loginProfile']
+          ['id']; // Extract the user ID from getData
 
-  ///here signup api of user.............24 april 2023...
+      // Save the user ID using GetStorage
+      final storage = GetStorage();
+      storage.write('userId', userId);
 
-  static UserSignUpApinew(
-    var PatientName,
-    var EmailId,
-    var MobileNumber,
-    var Password,
-    var ConfirmPassword,
-    var StateMasterId,
-    var CityMasterId,
-    var Location,
-    var Pincode,
-    var DOB,
-    var Gender,
-  ) async {
-    var url = '${baseUrl}api/SignupApi/PatientRegistration';
-    var body = {
-      "PatientName": PatientName,
-      "EmailId": EmailId,
-      "MobileNumber": MobileNumber,
-      "Password": Password,
-      "ConfirmPassword": ConfirmPassword,
-      "StateMaster_Id": StateMasterId,
-      "CityMaster_Id": CityMasterId,
-      "Location": Location,
-      "Pincode": Pincode,
-      "DOB": "$DOB",
-      "Gender": "$Gender"
-    };
-    http.Response r = await http.post(
-      Uri.parse(url), body: body,
-      //headers: headers
-    );
-    // print(r.body);
-    if (r.statusCode == 200) {
-      Get.snackbar(
-        'Success',
-        r.body,
-        duration: const Duration(seconds: 2),
-      );
-      print(r.body);
-
-      return r;
-    } else if (r.statusCode == 401) {
-      Get.snackbar(
-        'message',
-        r.body,
-        duration: const Duration(seconds: 2),
+      // Print the user ID
+      print('Saved user ID: $userId');
+      // Show success toast
+      Fluttertoast.showToast(
+        msg: "Profile created successfully!",
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
       );
     } else {
-      Get.snackbar(
-        'Error',
-        r.body,
-        duration: const Duration(seconds: 2),
+      print(
+          'Failed to create profile. Status code: ${httpResponse.statusCode}');
+
+      Fluttertoast.showToast(
+        msg:
+            "Failed to create profile. Status code: ${httpResponse.statusCode}",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
       );
-      return r;
     }
+
+    return httpResponse;
   }
 
-  ///here delivery address api of user.............27 april 2023...
+  ///4.login_email..........post...apis...
+  static Future<http.Response> LoginApi(String emailId, String password) async {
+    var url = "${baseUrl}Login/ProfileLogin";
+    var body = jsonEncode({
+      "emailId": emailId,
+      "password": password,
+    });
 
-  static deliverymedicineAddressApi(
-    var Name,
-    var Email,
-    //var Password,
-    var MobileNumber,
-    var StateMasterId,
-    var CityMasterId,
-    var DeliveryAddress,
-    var PinCode,
-    //var Patient_Id,
-  ) async {
-    var url = '${baseUrl}api/PatientApi/MedicineAddress';
-    //saved id..........
-    var prefs = GetStorage();
-    //prefs.write("Id".toString(), json.decode(r.body)['data']['Id']);
-    userid = prefs.read("Id").toString();
-    print('&&&&&&&&&&&&&&&&&&&&&&userid:${Id}');
-    var body = {
-      "Name": Name,
-      "Email": Email,
-      //"Password": "12345",
-      "MobileNumber": MobileNumber,
-      "StateMaster_Id": StateMasterId,
-      "CityMaster_Id": CityMasterId,
-      "DeliveryAddress": DeliveryAddress,
-      "PinCode": PinCode,
-      "Patient_Id": userid,
-    };
-    http.Response r = await http.post(
-      Uri.parse(url), body: body,
-      //headers: headers
-    );
-    // print(r.body);
-    if (r.statusCode == 200) {
-      print(r.body);
-      print(body);
-
-      return r;
-    } else if (r.statusCode == 401) {
-      Get.snackbar('message', r.body);
-    } else {
-      Get.snackbar('Error', r.body);
-      return r;
-    }
-  }
-
-  ///todo:here lab booking1 api of user.............27 april 2023...
-
-  static labbookingpostApi(
-    var StateMasterId,
-    var CityMasterId,
-    var testId,
-  ) async {
-    var url = '${baseUrl}api/LabApi/LabBooking';
-    var body = {
-      "StateMaster_Id": StateMasterId,
-      "CityMaster_Id": CityMasterId,
-      "testId": testId,
-    };
-    http.Response r = await http.post(
-      Uri.parse(url), body: body,
-      //headers: headers
-    );
-    // print(r.body);
-    if (r.statusCode == 200) {
-      print(r.body);
-      print(body);
-
-      return r;
-    } else if (r.statusCode == 401) {
-      Get.snackbar('message', r.body);
-    } else {
-      Get.snackbar('Error', r.body);
-      return r;
-    }
-  }
-
-  ///todo:here doctor booking1 api of user.............1 may 2023...
-
-  static doctorbooking1postApi(
-    var Department_id,
-    var Specialist_id,
-    var StateMaster_Id,
-    var CityMaster_Id,
-  ) async {
-    var url = '${baseUrl}api/DoctorApi/DoctorChoose';
-    var body = {
-      "Department_id": Department_id,
-      "Specialist_id": Specialist_id,
-      "StateMaster_Id": StateMaster_Id,
-      "CityMaster_Id": CityMaster_Id,
-    };
-    http.Response r = await http.post(
-      Uri.parse(url), body: body,
-      //headers: headers
-    );
-    // print(r.body);
-    if (r.statusCode == 200) {
-      print(r.body);
-      print(body);
-
-      return r;
-    } else if (r.statusCode == 401) {
-      Get.snackbar('message', r.body);
-    } else {
-      Get.snackbar('Error', r.body);
-      return r;
-    }
-  }
-
-  ///todo:here doctor apt done api of user.............4_oct.... 2023...
-
-  ///login user api ps welness api 2..................................
-  static LoginEmailApi(
-    var Username,
-    var Password,
-  ) async {
-    var url = '${baseUrl}api/SignupApi/Login';
-
-    var body = {
-      "Username": Username,
-      "Password": Password,
-    };
+    print("loginnnn");
     print(body);
+
     http.Response r = await http.post(
-      Uri.parse(url), body: body,
-      //headers: headers
+      Uri.parse(url),
+      body: body,
+      headers: {
+        "Content-Type": "application/json",
+      },
     );
+
     print(r.body);
+
     if (r.statusCode == 200) {
-      //CallLoader.loader();
-      await Future.delayed(Duration(milliseconds: 500));
-      //CallLoader.hideLoader();
-      var prefs = GetStorage();
+      var responseData = json.decode(r.body);
+      var userId = responseData['loginProfile']['id'];
 
-      ///here we are defining status code.....
-      var status = json.decode(r.body)['Status'];
-      print('ywgefYKUWEFG${status}');
-      if (status == 0) {
-        Get.snackbar('Failed', '${json.decode(r.body)['Message']}',
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            duration: (Duration(seconds: 3)));
-        //CallLoader.hideLoader();
-      } else {
-        //await _getGeoLocationPosition();
-        //CallLoader.hideLoader();
-        // CallLoader.loader();
-        //CallLoader.loader();
-        await Future.delayed(Duration(seconds: 2));
-        Get.snackbar('Sucess', '${json.decode(r.body)['Message']}',
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.green.shade400,
-            colorText: Colors.white,
-            duration: (Duration(seconds: 3)));
+      // Save user ID (assuming 'Id' is part of the response JSON)
+      prefs.write("Id", userId);
+      print('Saved userId: $userId');
 
-        print('princee notificationdsfvdsvdsv');
-      }
+      // Navigate to HomePage
+      Get.to(() => Home());
 
-      //saved id..........
-      prefs.write("Id".toString(), json.decode(r.body)['data']['Id']);
-      Id = prefs.read("Id").toString();
-      print('&&&&&&&&&&&&&&&&&&&&&&user:${Id}');
-
-      //saved id..........
-      prefs.write("Id".toString(), json.decode(r.body)['data']['Id']);
-      userid = prefs.read("Id").toString();
-      print('&&&&&&&&&&&&&&&&&&&&&&userid:${Id}');
-      //  static String DoctorId = ''.toString();
-
-      prefs.write(
-          "DoctorId".toString(), json.decode(r.body)['data']['DoctorId']);
-      //DoctorId = prefs.read("DoctorId").toString();
-
-      //saved user credentials..........
-      prefs.write("PatientRegNo".toString(),
-          json.decode(r.body)['data']['PatientRegNo']);
-      //PatientRegNo = prefs.read("PatientRegNo").toString();
-//user password........
-      prefs.write(
-          "Password".toString(), json.decode(r.body)['data']['Password']);
-      //userPassword = prefs.read("Password").toString();
-//
-      //device driverpassword
-
-      prefs.write(
-          "Password".toString(), json.decode(r.body)['data']['Password']);
-      // driverpassword = prefs.read("Password").toString();
-      //device driverId........
-      prefs.write(
-          "DriverId".toString(), json.decode(r.body)['data']['DriverId']);
-      // DriverId = prefs.read("DriverId").toString();
-
-      //device driverId........
-      prefs.write(
-          "DriverId".toString(), json.decode(r.body)['data']['DriverId']);
-      // DriverId = prefs.read("DriverId").toString();
-
-      //device nurseId........
-      prefs.write("NurseId".toString(), json.decode(r.body)['data']['NurseId']);
-
-      ///NurseId = prefs.read("NurseId").toString();
-//adminId
-      //StatemasterId = ''.toString();
-      //   static String CitymasterId
-      ///todo: save state id........
-      prefs.write("StateMaster_Id".toString(),
-          json.decode(r.body)['data']['StateMaster_Id']);
-      //StatemasterId = prefs.read("StateMaster_Id").toString();
-      // print('&&&&statemasterId:${StatemasterId}');
-
-      ///todo: save city id........
-      prefs.write("CityMaster_Id".toString(),
-          json.decode(r.body)['data']['CityMaster_Id']);
-      //CitymasterId = prefs.read("CityMaster_Id").toString();
-      /// print('&&citymasterId:${CitymasterId}');
-
-      ///var prefs = GetStorage();
-      //savid..........
-      prefs.write("AdminLogin_Id".toString(),
-          json.decode(r.body)['data']['AdminLogin_Id']);
-      adminId = prefs.read("AdminLogin_Id").toString();
-      print('&&&&&&&&&&&&&&&&&&&&&&:${adminId}');
-
-      ///
       return r;
     } else if (r.statusCode == 401) {
-      await Future.delayed(Duration(seconds: 3));
-      Get.snackbar('Error', r.body);
-      return r;
-      //Get.snackbar('message', r.body);
+      Get.snackbar('Message', r.body);
     } else {
-      // CallLoader.loader();
-      await Future.delayed(Duration(seconds: 2));
-      Get.snackbar("Failed", "${r.body}");
-      //CallLoader.hideLoader();
-      // Get.snackbar('Error', r.body);
-      return r;
+      Get.snackbar('Error', r.body);
     }
+
+    return r;
   }
 
   ///api 1.....all jobs....
@@ -475,58 +233,16 @@ class ApiProvider {
     }
   }
 
-  ///4.login_email..........post...apis...
-  static Future<http.Response> LoginApi(String emailId, String password) async {
-    var url = "${baseUrl}Login/ProfileLogin";
-    var body = jsonEncode({
-      "emailId": emailId,
-      "password": password,
-    });
-
-    print("loginnnn");
-    print(body);
-
-    http.Response r = await http.post(
-      Uri.parse(url),
-      body: body,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    );
-
-    print(r.body);
-
-    if (r.statusCode == 200) {
-      var responseData = json.decode(r.body);
-      var userId = responseData['loginProfile']['id'];
-
-      // Save user ID (assuming 'Id' is part of the response JSON)
-      prefs.write("Id", userId);
-      print('Saved userId: $userId');
-
-      // Navigate to HomePage
-      Get.to(() => Home());
-
-      return r;
-    } else if (r.statusCode == 401) {
-      Get.snackbar('Message', r.body);
-    } else {
-      Get.snackbar('Error', r.body);
-    }
-
-    return r;
-  }
-
   ///5.profile_api...
   static PriofileApi() async {
     var prefs = GetStorage();
 
     //saved userid..........
     //prefs.write("Id".toString(), json.decode(r.body)['Id']);
-    userid = prefs.read("Id").toString();
-    print('wwwuseridEE:${userid}');
+    userId = prefs.read("Id").toString();
+    print('wwwuseridEE:${userId}');
     //https://api.hirejobindia.com/api/App/GetProfile?userId=2
-    var url = '${baseUrl}App/GetProfile?userId=$userid';
+    var url = '${baseUrl}App/GetProfile?userId=$userId';
     try {
       http.Response r = await http.get(Uri.parse(url));
       if (r.statusCode == 200) {
@@ -543,12 +259,12 @@ class ApiProvider {
 
   ///6.job apply successfully..........post...apis...
   static Future<http.Response> ApplyJobAPi(String JobId) async {
-    userid = prefs.read("Id").toString();
-    print('www:${userid}');
+    userId = prefs.read("Id").toString();
+    print('www:${userId}');
     var url = "${baseUrl}App/Applyjob";
     var body = jsonEncode({
       "JobId": JobId,
-      "userID": userid,
+      "userID": userId,
     });
 
     print("jobapply");
@@ -603,12 +319,12 @@ class ApiProvider {
 
   ///6.job save successfully..........post...apis...
   static Future<http.Response> SaveJobAPi(String JobId) async {
-    userid = prefs.read("Id").toString();
-    print('www:${userid}');
+    userId = prefs.read("Id").toString();
+    print('www:${userId}');
     var url = "${baseUrl}App/AddBookmark";
     var body = jsonEncode({
       "JobId": JobId,
-      "userID": userid,
+      "userID": userId,
     });
 
     print("jobsave");
@@ -663,9 +379,9 @@ class ApiProvider {
 
   ///api 7.....all  saved jobs....
   static AllSavedJobsApi() async {
-    userid = prefs.read("Id").toString();
-    print('wwwsaved:${userid}');
-    var url = "${baseUrl}App/GetBookmarks?userId=$userid";
+    userId = prefs.read("Id").toString();
+    print('wwwsaved:${userId}');
+    var url = "${baseUrl}App/GetBookmarks?userId=$userId";
     try {
       http.Response r = await http.get(Uri.parse(url));
       print(r.body.toString());
@@ -683,9 +399,9 @@ class ApiProvider {
 
   ///api 8.....all  saved jobs....
   static AllAppliedJobsApi() async {
-    userid = prefs.read("Id").toString();
-    print('wwwsaved:${userid}');
-    var url = "${baseUrl}App/GetJobapplyList?userId=$userid";
+    userId = prefs.read("Id").toString();
+    print('wwwsaved:${userId}');
+    var url = "${baseUrl}App/GetJobapplyList?userId=$userId";
     try {
       http.Response r = await http.get(Uri.parse(url));
       print(r.body.toString());
@@ -743,32 +459,39 @@ class ApiProvider {
   // }
 
   ///
-  static const String apiUrl =
-      'https://api.hirejobindia.com/api/Login/createProfile';
 
-  static Future<http.Response> createProfile(Map<String, String> formData,
-      Uint8List cvFileContent, String cvFileName) async {
-    var uri = Uri.parse(apiUrl);
-    var request = http.MultipartRequest('POST', uri);
+  static String apiUrl2 = "${baseUrl}Login/createProfile";
 
-    // Add form fields
-    formData.forEach((key, value) {
-      request.fields[key] = value;
-    });
+  //var url = "${baseUrl}App/DeleteBookmarkjob/?id=$jobId";
+  //static const String apiUrl = 'https://api.hirejobindia.com/api/Login/createProfile';
+  ///
 
-    // Add file field
-    request.files.add(http.MultipartFile.fromBytes(
-      'CVFileName', // The name of the file field
-      cvFileContent,
-      filename: cvFileName, // Use the file name from the parameter
-      contentType:
-          MediaType('application', 'pdf'), // Use MediaType from http_parser
-    ));
-
-    // Send the request
-    var response = await request.send();
-    return http.Response.fromStream(response);
-  }
+  // static Future<http.Response> createProfile(Map<String, String> formData,
+  //     Uint8List cvFileContent, String cvFileName) async {
+  //   var uri = Uri.parse(apiUrl);
+  //   var request = http.MultipartRequest('POST', uri);
+  //   print("urixzxzx");
+  //
+  //   print(uri);
+  //
+  //   // Add form fields
+  //   formData.forEach((key, value) {
+  //     request.fields[key] = value;
+  //   });
+  //
+  //   // Add file field
+  //   request.files.add(http.MultipartFile.fromBytes(
+  //     'CVFileName', // The name of the file field
+  //     cvFileContent,
+  //     filename: cvFileName, // Use the file name from the parameter
+  //     contentType:
+  //         MediaType('application', 'pdf'), // Use MediaType from http_parser
+  //   ));
+  //
+  //   // Send the request
+  //   var response = await request.send();
+  //   return http.Response.fromStream(response);
+  // }
 
   ///state api..
   ///state Api get...........................

@@ -40,13 +40,16 @@ class GetProfileModel {
 class Response {
   String? fullName;
   String? emailId;
-  int? mobileNumber;
+  num? mobileNumber;
   String? experience;
   String? stateName;
   String? cityName;
   String? genderName;
   String? dateofbirth;
   String? resumeFilePath;
+  num? pincode;
+  String? address;
+  String? profileImage;
 
   Response({
     this.fullName,
@@ -58,6 +61,9 @@ class Response {
     this.genderName,
     this.dateofbirth,
     this.resumeFilePath,
+    this.pincode,
+    this.address,
+    this.profileImage,
   });
 
   factory Response.fromJson(Map<String, dynamic> json) => Response(
@@ -70,6 +76,9 @@ class Response {
         genderName: json["genderName"],
         dateofbirth: json["dateofbirth"],
         resumeFilePath: json["resumeFilePath"],
+        pincode: json["pincode"],
+        address: json["address"],
+        profileImage: json["profileImage"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -82,5 +91,8 @@ class Response {
         "genderName": genderName,
         "dateofbirth": dateofbirth,
         "resumeFilePath": resumeFilePath,
+        "pincode": pincode,
+        "address": address,
+        "profileImage": profileImage,
       };
 }

@@ -47,5 +47,8 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSDownloadsFolderUsageDescription</key>
+    <string>Allow saving files to your device</string>
+
 </dict>
 </plist>

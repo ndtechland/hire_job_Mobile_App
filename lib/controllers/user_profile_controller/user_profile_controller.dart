@@ -9,11 +9,14 @@ import '../../services_apis/api_servicesss.dart';
 class ProfileController extends GetxController {
   RxBool isLoading = true.obs;
 
+  RxString cvUrl = ''.obs;
+
   GetProfileModel? getprofileModel;
 
   Future<void> profileApi() async {
     isLoading(true);
     getprofileModel = await ApiProvider.PriofileApi();
+
     if (getprofileModel?.response?.emailId == null) {
       Timer(
         const Duration(seconds: 1),

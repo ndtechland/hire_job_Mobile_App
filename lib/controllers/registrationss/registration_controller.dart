@@ -1,14 +1,17 @@
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:hirejobindia/modules/all_pages/pages/login.dart';
 
 import '../../models/city_model.dart';
 import '../../models/state_model.dart';
-import '../../modules/all_pages/pages/login.dart';
 import '../../services_apis/api_servicesss.dart';
 
 class RegistrationController extends GetxController {
   final isLoading = false.obs;
+
+  final GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
 
   var selectedGender = ''.obs;
 
@@ -73,7 +76,8 @@ class RegistrationController extends GetxController {
 
       if (response.statusCode == 200) {
         print('Profile created successfully!');
-        Get.to(Login());
+        // Get.offAll(Login());
+        Get.offAll(() => Login());
         print(response.body);
       } else {
         print('Error creating profile: ${response.statusCode}');

@@ -8,12 +8,15 @@ import 'package:hirejobindia/widget/elevated_button.dart';
 import 'package:hirejobindia/widget/text_btn.dart';
 
 import '../../../controllers/login_controllers/login_controllersss.dart';
+import '../../../controllers/registrationss/registration_controller.dart';
 
 class Login extends StatelessWidget {
   static const String id = 'Login';
   Login({Key? key}) : super(key: key);
 
   LoginController _loginController = Get.put(LoginController());
+  final RegistrationController _registrationController =
+      Get.put(RegistrationController());
   //ProfileController _profileController = Get.put(ProfileController());
 
   @override
@@ -147,7 +150,15 @@ class Login extends StatelessWidget {
                                           children: [
                                             blackText("Don't have an account?"),
                                             MyTextButton(
-                                              onPressed: () {
+                                              onPressed: () async {
+                                                _registrationController
+                                                    .getStatepi();
+                                                _registrationController
+                                                    .onInit();
+                                                _registrationController
+                                                    .selectedState.value = null;
+                                                await Future.delayed(Duration(
+                                                    milliseconds: 800));
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
