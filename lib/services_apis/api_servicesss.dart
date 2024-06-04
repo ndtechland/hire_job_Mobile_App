@@ -15,6 +15,7 @@ import '../constants/static_text.dart';
 import '../models/all_jobs_model.dart';
 import '../models/city_model.dart';
 import '../models/company_model.dart';
+import '../models/employee_model/profile_model/profile_info_model_personal.dart';
 import '../models/profile_model.dart';
 import '../models/saved_job_model.dart';
 import '../models/state_model.dart';
@@ -34,7 +35,7 @@ class ApiProvider {
   //static var baseUrl1 = 'https://api.gyros.farm/';
   //'http://pswellness.in/';
   static String token = '';
-  static String Token = '';
+  //static String Token = '';
 
   //static String catid = '';
   //static String productid = '';
@@ -44,6 +45,7 @@ class ApiProvider {
   static String adminId = ''.toString();
   //static String userid = ''.toString();
   static String userId = ''.toString();
+  static String employeeId = ''.toString();
 
   final box = GetStorage();
 
@@ -439,6 +441,10 @@ class ApiProvider {
     }
   }
 
+  ///
+
+  ///
+
   ///registration....
   // static Future<http.Response> createProfile(
   //     Map<String, dynamic> formData) async {
@@ -528,7 +534,205 @@ class ApiProvider {
     }
   }
 
+  ///4.login_employeee..........post...apis...
+  static Future<http.Response> EmployeeLoginApi(
+      String employee_ID, String password) async {
+    var url = "${baseUrl}Login/EmployeeLogin";
+    var body = jsonEncode({
+      "employee_ID": employee_ID,
+      "password": password,
+    });
+
+    print("loginnnnemployee");
+    print(body);
+
+    http.Response r = await http.post(
+      Uri.parse(url),
+      body: body,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    );
+
+    print(r.body);
+
+    if (r.statusCode == 200) {
+      var responseData = json.decode(r.body);
+      var employeeId = responseData['loginemp']['id'];
+      //token
+
+      // Save user ID (assuming 'Id' is part of the response JSON)
+      prefs.write("Id", employeeId);
+      print('Saved employeeId: $employeeId');
+
+      ///token...
+      prefs.write("token".toString(), json.decode(r.body)['token']);
+      token = prefs.read("token").toString();
+      print("tokennnn");
+      print(token);
+      // Navigate to HomePage
+      //Get.to(() => Home());
+
+      return r;
+    } else if (r.statusCode == 401) {
+      Get.snackbar('Message', r.body);
+    } else {
+      Get.snackbar('Error', r.body);
+    }
+
+    return r;
+  }
+
+  ///profile personal_info_employee....5...
+
+  static PriofilePersonalEmployeeApi() async {
+    var prefs = GetStorage();
+
+    // Read saved user id and token
+    userId = prefs.read("Id").toString();
+    print('wwwuseridEE: $userId');
+
+    token = prefs.read("token").toString();
+    print('token: $token');
+    var url = '${baseUrl}EmployeeApi/GetEmployeePresnolInfo';
+    try {
+      // Add the token to the headers
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      };
+
+      http.Response r = await http.get(Uri.parse(url), headers: headers);
+      if (r.statusCode == 200) {
+        print("url");
+        print(url);
+        GetProfileEmployeePersonalModel? geetprofilepersonalmodel =
+            getProfileEmployeePersonalModelFromJson(r.body);
+        print(
+            "profileinfo: ${geetprofilepersonalmodel.data!.personalEmailAddress}");
+        return geetprofilepersonalmodel;
+      } else {
+        print('Failed to load profile information');
+      }
+    } catch (error) {
+      print('profileedetaileror: $error');
+    }
+  }
+
   ///
 }
 
 ///todo: device  user token for user........
+//  //login with plus cart api gyros api 19.....................................
+//
+//   static cartplusApi(
+//     var productId,
+//   ) async {
+//     var url = baseUrl + 'api/ProductApi/PlusAddToCart/$productId';
+//     var prefs = GetStorage();
+//     //saved id..........
+//
+//     final userId = prefs.read("Id").toString();
+//     print('&&&&&&&&&&&&&&&&&&&&&&okoko:${userId}');
+//
+//     token = prefs.read("token").toString();
+//     print('&&&&&&&&&&&&&&&&&&&&&&okok:${token}');
+//     var body = {
+//       "Id": userId,
+//     };
+//     final headers = {"Authorization": "Bearer $token"};
+//
+//     print(body);
+//     http.Response r =
+//         await http.post(Uri.parse(url), body: body, headers: headers);
+//     print(r.body);
+//     print(r.statusCode);
+//
+//     if (r.statusCode == 200) {
+//       return r;
+//     } else {
+//       Get.snackbar('Error', 'not increase');
+//       return r;
+//     }
+//   }
+//
+//   //login with decrease cart api gyros api 20..................................
+//
+//   static cartminusApi(
+//     var productId,
+//   ) async {
+//     var url = baseUrl + 'api/ProductApi/DeleteAddToCart/$productId';
+//
+//     var prefs = GetStorage();
+//     //saved id..........
+//
+//     final userId = prefs.read("Id").toString();
+//     print('&&&&&&&&&&&&&&&&&&&&&&okoko:${userId}');
+//
+//     token = prefs.read("token").toString();
+//     print('&&&&&&&&&&&&&&&&&&&&&&okok:${token}');
+//     var body = {
+//       "Id": userId,
+//     };
+//     final headers = {"Authorization": "Bearer $token"};
+//
+//     print(body);
+//     http.Response r =
+//         await http.post(Uri.parse(url), body: body, headers: headers);
+//     print(r.body);
+//     print(r.statusCode);
+//
+//     if (r.statusCode == 200) {
+//       var data = jsonDecode(r.body.toString());
+//       if (r.statusCode == 200) {
+//         Get.snackbar('message', "success");
+//       } else {
+//         Get.snackbar('message', data["error"]);
+//       }
+//       return r;
+//     } else {
+//       // Get.snackbar('message', data["stat"]);
+//       return r;
+//     }
+//   }
+//
+//   //sub_address_by_id  gyros api 21.....................................
+
+///.....
+//  //login with email api gyros api 2..................................
+//
+//   static LoginEmailApi(
+//     var Email,
+//     var PassWord,
+//   ) async {
+//     var url = baseUrl + 'api/AdminApi/LoginWithEmail';
+//
+//     var body = {
+//       "Email": Email,
+//       "PassWord": PassWord,
+//     };
+//     print(body);
+//     http.Response r = await http.post(
+//       Uri.parse(url), body: body,
+//       //headers: headers
+//     );
+//     print(r.body);
+//     if (r.statusCode == 200) {
+//       var prefs = GetStorage();
+//       //saved id..........
+//       prefs.write("Id".toString(), json.decode(r.body)['Id']);
+//       Id = prefs.read("Id").toString();
+//       print('&&&&&&&&&&&&&&&&&&&&&&:${Id}');
+//
+//       //saved token.........
+//       prefs.write("token".toString(), json.decode(r.body)['token']);
+//       token = prefs.read("token").toString();
+//       print(token);
+//       return r;
+//     } else if (r.statusCode == 401) {
+//       Get.snackbar('message', r.body);
+//     } else {
+//       Get.snackbar('Error', r.body);
+//       return r;
+//     }
+//   }

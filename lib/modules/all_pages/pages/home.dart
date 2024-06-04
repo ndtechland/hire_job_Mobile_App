@@ -18,6 +18,7 @@ import '../../../controllers/testimonial_controllerr/testimonial_controllersss.d
 import '../../../controllers/user_profile_controller/user_profile_controller.dart';
 import '../../../controllers/view_job_controller/job_controllersss.dart';
 import '../../../widget/elevated_button2.dart';
+import 'emploree_pages/employee_login.dart';
 import 'job_details.dart';
 
 class Home extends StatefulWidget {
@@ -99,6 +100,7 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.symmetric(vertical: 8),
             child: CustomElevatedButton(
               onPressed: () {
+                Get.to(EmployeeLogin());
                 // Add your onPressed logic here
               },
               text: "E-Login",

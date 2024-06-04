@@ -51,7 +51,10 @@ class MyApp extends StatelessWidget {
         dividerColor: Colors.transparent,
       ),
       home: Scaffold(
-        body: SplashScreen(),
+        body:
+
+            ///HomeEmployee(),
+            SplashScreen(),
       ),
       initialBinding: BindingsBuilder(() {
         Get.lazyPut<BottomNavigationBarController>(

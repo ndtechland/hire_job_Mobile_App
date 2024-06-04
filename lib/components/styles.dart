@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 const appColor = Color(0xFF6F67FE);
 const appColor2 = Color(0xFFB446FF);
 const linkedinColor = Color(0xFF0077B5);
+const logoColor = Color(0xFF214683);
+const logocolorlite = Color(0xff657EA9);
+const logocolorred = Color(0xff5A1313);
+
+//5A1313
+
+//214683
 
 const backgroundColor = Color.fromARGB(255, 243, 243, 243);
 
