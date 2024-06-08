@@ -736,7 +736,7 @@ class PersonalProfile extends StatelessWidget {
           gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: <Color>[appColor2, appColor]),
+              colors: <Color>[appColor, appColor]),
         ),
         child: Column(
           children: [

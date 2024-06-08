@@ -1,17 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-import '../../../models/autologin_account_model.dart';
+import '../../../models/employee_model/autologin_employee_model.dart';
 import '../../../modules/all_pages/pages/emploree_pages/home_page_employee.dart';
 import '../../../services_apis/api_servicesss.dart';
-import '../../../services_apis/autologin_services.dart';
-import '../profile_employee_controller/employee_profile_controller.dart';
+import '../../../services_apis/auto_login_employee.dart';
+import '../../employee_controller/profile_controller/profile_info_employee_controller.dart';
+import '../employee_dashboard_controller/employee_dashboardcontroller.dart';
 
 class EmployeeLoginController extends GetxController {
-  final EmployeeProfileController _employeeprofileController =
-      Get.put(EmployeeProfileController());
+//   final EmployeeProfileController _employeeprofileController =
+//       Get.put(EmployeeProfileController());
 
-  final GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
+  final ProfileEmployeeController _getprofileepersonal =
+      Get.put(ProfileEmployeeController());
+  HomedashboardController _homedashboardController =
+      Get.put(HomedashboardController());
+
+  final GlobalKey<FormState> loginFormKey2 = GlobalKey<FormState>();
 
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -28,19 +34,20 @@ class EmployeeLoginController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        await _employeeprofileController.profileApi();
-        _employeeprofileController.update();
+        _getprofileepersonal.profileemployeeApi();
+        _getprofileepersonal.update();
 
-        final accountData = messageFromJson(response.body);
-        await accountService.setAccountData(accountData);
+        final accountData2 = employeeLoginFromJson(response.body);
+        await accountService2.setAccountData2(accountData2);
+        _homedashboardController.dashboarddApi();
 
-        Get.off(() => HomeEmployee());
+        Get.to(() => HomeEmployee());
       } else {
         Get.snackbar('Error', 'Failed to login. Please try again.');
       }
     } catch (e) {
       print('Error during login: $e');
-      Get.off(() => HomeEmployee());
+      // Get.off(() => HomeEmployee());
 
       // Get.snackbar('Error', 'An unexpected error occurred. Please try again.');
     } finally {
@@ -69,8 +76,8 @@ class EmployeeLoginController extends GetxController {
   }
 
   void checkemployeeLogin() {
-    if (loginFormKey.currentState!.validate()) {
-      loginFormKey.currentState!.save();
+    if (loginFormKey2.currentState!.validate()) {
+      loginFormKey2.currentState!.save();
       loginemployeeApi();
     }
   }

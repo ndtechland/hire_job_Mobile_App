@@ -69,6 +69,7 @@ dev_dependencies:
   flutter_launch: ^0.3.0
   razorpay_flutter:
   permission_handler:
+  table_calendar:
 
   #webview_flutter:
 

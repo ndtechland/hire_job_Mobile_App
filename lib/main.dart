@@ -7,6 +7,7 @@ import 'package:hirejobindia/controllers/nav_bar_controller/nav_controller.dart'
 import 'package:hirejobindia/modules/components/styles.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'controllers/employeee_controllersss/employee_dashboard_controller/employee_dashboardcontroller.dart';
 import 'controllers/user_profile_controller/user_profile_controller.dart';
 import 'controllers/view_job_controller/job_controllersss.dart';
 import 'modules/all_pages/pages/pdf_view_download.dart';
@@ -61,6 +62,9 @@ class MyApp extends StatelessWidget {
             () => BottomNavigationBarController());
         Get.lazyPut<AllJibsController>(() => AllJibsController());
         Get.lazyPut<ProfileController>(() => ProfileController());
+        Get.lazyPut<HomedashboardController>(() => HomedashboardController());
+
+        //HomedashboardController
       }),
     );
   }

@@ -10,10 +10,11 @@ import '../user_profile_controller/user_profile_controller.dart';
 class LoginController extends GetxController {
   final ProfileController _profileController = Get.put(ProfileController());
 
+  //final GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
 
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController usernameController1 = TextEditingController();
+  final TextEditingController passwordController1 = TextEditingController();
 
   final RxBool isLoading = false.obs;
 
@@ -22,12 +23,12 @@ class LoginController extends GetxController {
       isLoading.value = true;
 
       final response = await ApiProvider.LoginApi(
-        usernameController.text,
-        passwordController.text,
+        usernameController1.text,
+        passwordController1.text,
       );
 
       if (response.statusCode == 200) {
-        await _profileController.profileApi();
+        _profileController.profileApi();
         _profileController.update();
 
         final accountData = messageFromJson(response.body);

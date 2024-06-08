@@ -31,7 +31,7 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
     final name = basename(widget.file.path);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: appColor,
+        backgroundColor: logoColor,
         elevation: 0,
         centerTitle: true,
         title: Text(

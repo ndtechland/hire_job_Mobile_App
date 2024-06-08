@@ -2,17 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hirejobindia/components/styles.dart';
+import 'package:hirejobindia/modules/all_pages/pages/forgot_password.dart';
+import 'package:hirejobindia/modules/all_pages/pages/registration_test.dart';
+import 'package:hirejobindia/widget/elevated_button.dart';
 import 'package:hirejobindia/widget/text_btn.dart';
 
-import '../../../../controllers/employeee_controllersss/employee_login_controllers/employee_login_controllers.dart';
-import '../../../../widget/employee_elevatedbutton.dart';
+import '../../../controllers/login_controllers/login_controllersss.dart';
+import '../../../controllers/registrationss/registration_controller.dart';
 
-class EmployeeLogin extends StatelessWidget {
+class Login2 extends StatelessWidget {
   static const String id = 'Login';
-  EmployeeLogin({Key? key}) : super(key: key);
+  Login2({Key? key}) : super(key: key);
 
-  EmployeeLoginController _employeeloginController =
-      Get.put(EmployeeLoginController());
+  LoginController _loginController = Get.put(LoginController());
+  final RegistrationController _registrationController =
+      Get.put(RegistrationController());
+
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(
@@ -22,11 +27,11 @@ class EmployeeLogin extends StatelessWidget {
             return Scaffold(
               backgroundColor: Colors.white,
               body: Obx(
-                () => _employeeloginController.isLoading.value
+                () => _loginController.isLoading.value
                     ? Center(child: CircularProgressIndicator())
                     //child:
                     : Form(
-                        key: _employeeloginController.loginFormKey2,
+                        key: _loginController.loginFormKey,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: SingleChildScrollView(
                           child: Center(
@@ -52,14 +57,14 @@ class EmployeeLogin extends StatelessWidget {
                                     child: Column(
                                       children: [
                                         textField2(
-                                          hint: 'Employee ID',
+                                          hint: 'Username',
                                           suffixIcon: Icons.person_outline,
-                                          controller: _employeeloginController
-                                              .usernameController,
+                                          controller: _loginController
+                                              .usernameController1,
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty) {
-                                              return 'Please enter Employee ID';
+                                              return 'Please enter username';
                                             }
                                             return null;
                                           },
@@ -68,8 +73,8 @@ class EmployeeLogin extends StatelessWidget {
                                         textField2(
                                           hint: 'Password',
                                           suffixIcon: Icons.lock,
-                                          controller: _employeeloginController
-                                              .passwordController,
+                                          controller: _loginController
+                                              .passwordController1,
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty) {
@@ -85,13 +90,13 @@ class EmployeeLogin extends StatelessWidget {
                                           children: [
                                             MyTextButton(
                                               onPressed: () {
-                                                // Navigator.push(
-                                                //   context,
-                                                //   MaterialPageRoute(
-                                                //     builder: (context) =>
-                                                //         const ForgotPassword(),
-                                                //   ),
-                                                // );
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const ForgotPassword(),
+                                                  ),
+                                                );
                                               },
                                               text: 'Forgot Password',
                                               colors: appColor,
@@ -102,14 +107,13 @@ class EmployeeLogin extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  MyElevatedButtonemployee(
+                                  MyElevatedButton(
                                     onPressed: () {
-                                      if (_employeeloginController
-                                              .loginFormKey2.currentState
+                                      if (_loginController
+                                              .loginFormKey.currentState
                                               ?.validate() ??
                                           false) {
-                                        _employeeloginController
-                                            .checkemployeeLogin();
+                                        _loginController.checkLogin();
 
                                         // Navigator.push(
                                         //   context,
@@ -130,6 +134,48 @@ class EmployeeLogin extends StatelessWidget {
                                     width: 40,
                                   ),
                                   const SizedBox(height: 34),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 24),
+                                    height: 50,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(height: 0),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            blackText("Don't have an account?"),
+                                            MyTextButton(
+                                              onPressed: () async {
+                                                _registrationController
+                                                    .getStatepi();
+                                                _registrationController
+                                                    .onInit();
+                                                _registrationController
+                                                    .selectedState.value = null;
+                                                await Future.delayed(Duration(
+                                                    milliseconds: 800));
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RegistrationPage()
+                                                      //const
+                                                      //Register(),
+                                                      ),
+                                                );
+                                              },
+                                              colors: appColor,
+                                              text: "Sign up",
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -152,7 +198,7 @@ class EmployeeLogin extends StatelessWidget {
                         end: Alignment.bottomCenter,
                         colors: [
                           appColor,
-                          appColor,
+                          appColor2,
                         ],
                       ),
                     ),
@@ -161,7 +207,7 @@ class EmployeeLogin extends StatelessWidget {
                       children: [
                         logoImg(),
                         const Text(
-                          'Employee Login!',
+                          'Welcome Back!',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 26,

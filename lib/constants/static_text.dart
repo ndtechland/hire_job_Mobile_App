@@ -6,4 +6,11 @@ class FixedText {
   static const String imgurl = "https://admin.hirejobindia.com";
   static const String imgurltestimonial =
       "https://admin.hirejobindia.com/TestimonalsImages/";
+
+  static const String offaptpdfurl = "https://admin.hirejobindia.com/";
 }
+
+//String imageUrl =
+//         "${FixedText.apiurl2}${_getprofileepersonal.getprofileemployeeModel?.data?.profileImage}";
+//     print("imageUrl");
+//     print(imageUrl);

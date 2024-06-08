@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hirejobindia/components/styles.dart';
@@ -13,12 +15,15 @@ import '../../../components/responsive_text.dart';
 import '../../../constants/static_text.dart';
 import '../../../controllers/catagory_controllerss/get_catagory_controller.dart';
 import '../../../controllers/company_controllers/company_controller.dart';
+import '../../../controllers/employee_controller/profile_controller/profile_info_employee_controller.dart';
 import '../../../controllers/home_page_controllerss/home_page_controllerss.dart';
 import '../../../controllers/testimonial_controllerr/testimonial_controllersss.dart';
 import '../../../controllers/user_profile_controller/user_profile_controller.dart';
 import '../../../controllers/view_job_controller/job_controllersss.dart';
+import '../../../services_apis/auto_login_employee.dart';
 import '../../../widget/elevated_button2.dart';
 import 'emploree_pages/employee_login.dart';
+import 'emploree_pages/home_page_employee.dart';
 import 'job_details.dart';
 
 class Home extends StatefulWidget {
@@ -68,6 +73,9 @@ class _HomeState extends State<Home> {
   AlltestimonialController _alltestimonialController =
       Get.put(AlltestimonialController());
 
+  final ProfileEmployeeController _getprofileepersonal =
+      Get.put(ProfileEmployeeController());
+
   ProfileController _profileController = Get.find();
 
   String stripHtmlTags(String htmlString) {
@@ -100,7 +108,25 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.symmetric(vertical: 8),
             child: CustomElevatedButton(
               onPressed: () {
-                Get.to(EmployeeLogin());
+                Timer(Duration(seconds: 2), () async {
+                  final accountData2 = await accountService2.getAccountData2;
+                  print("AccountData2: $accountData2");
+
+                  if (accountData2 == null) {
+                    await _getprofileepersonal.profileemployeeApi();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => EmployeeLogin()),
+                    );
+                  } else {
+                    await _getprofileepersonal.profileemployeeApi();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeEmployee()),
+                    );
+                  }
+                });
+                // Get.to(EmployeeLogin());
                 // Add your onPressed logic here
               },
               text: "E-Login",

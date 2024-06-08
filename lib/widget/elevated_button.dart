@@ -16,7 +16,7 @@ class MyElevatedButton extends StatelessWidget {
     required this.text,
     required this.height,
     required this.width,
-    this.gradient = const LinearGradient(colors: [appColor, appColor2]),
+    this.gradient = const LinearGradient(colors: [appColor, appColor]),
   }) : super(key: key);
 
   @override

@@ -6,6 +6,8 @@ import 'package:hirejobindia/modules/all_pages/pages/emploree_pages/profile_empl
 
 import '../../../../../components/styles.dart';
 import '../../../../../constants/app_colorss/app_colorss.dart';
+import 'bank_profile_info.dart';
+import 'basic_info_profile.dart';
 
 //import '../../constants/reusable_appbar/reusable_appbar.dart';
 
@@ -64,6 +66,16 @@ class EmployeeProfile extends StatelessWidget {
                   height: size.height * 0.05,
                   color: AppColors.th1wht2,
                   child: TabBar(
+                    labelColor: Colors.white, // Selected text color
+                    unselectedLabelColor: Colors.grey,
+                    indicator: BoxDecoration(
+                      borderRadius: BorderRadius.circular(0),
+                      color: appColor, // Change color here
+                    ),
+                    labelStyle: TextStyle(
+                        color: Colors
+                            .white), // Change selected text color to white
+                    unselectedLabelStyle: TextStyle(color: Colors.grey),
                     tabs: [
                       Tab(
                         child: Container(
@@ -106,20 +118,20 @@ class EmployeeProfile extends StatelessWidget {
                         ),
                       ),
                     ],
-                    indicator: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    // Empty box decoration to remove the underline
-                    labelColor: AppColors.graphtopbar, // Color for selected tab
-                    unselectedLabelColor:
-                        Colors.black, // Color for unselected tabs
-                    labelStyle: GoogleFonts.roboto(
-                        fontSize: size.height * 0.017,
-                        fontWeight: FontWeight.w300),
-                    unselectedLabelStyle: GoogleFonts.roboto(
-                        fontSize: size.height * 0.017,
-                        fontWeight: FontWeight.w300),
+                    // indicator: BoxDecoration(
+                    //   color: AppColors.white,
+                    //   borderRadius: BorderRadius.circular(10),
+                    // ),
+                    // // Empty box decoration to remove the underline
+                    // labelColor: AppColors.graphtopbar, // Color for selected tab
+                    // unselectedLabelColor:
+                    //     Colors.black, // Color for unselected tabs
+                    // labelStyle: GoogleFonts.roboto(
+                    //     fontSize: size.height * 0.017,
+                    //     fontWeight: FontWeight.w300),
+                    // unselectedLabelStyle: GoogleFonts.roboto(
+                    //     fontSize: size.height * 0.017,
+                    //     fontWeight: FontWeight.w300),
                   ),
                 ),
               ),
@@ -130,13 +142,9 @@ class EmployeeProfile extends StatelessWidget {
                     // monthly_sales(
                     //   isShowingMainData: true,
                     // ),
-                    Container(
-                      color: Colors.green,
-                    ),
+                    BasicEmployeeProfile(),
 
-                    Container(
-                      color: Colors.orange,
-                    ),
+                    BankDetailEmployeeProfile(),
 
                     ///todo:....................
                     // Your tab views here

@@ -15,7 +15,13 @@ import '../constants/static_text.dart';
 import '../models/all_jobs_model.dart';
 import '../models/city_model.dart';
 import '../models/company_model.dart';
+import '../models/employee_model/all_salary_slip_model.dart';
+import '../models/employee_model/dashboard_employee_model.dart';
+import '../models/employee_model/offer_appointment_latter_model.dart';
+import '../models/employee_model/profile_model/bank_profile_details_employee.dart';
+import '../models/employee_model/profile_model/profile_basic_detail_model.dart';
 import '../models/employee_model/profile_model/profile_info_model_personal.dart';
+import '../models/employee_model/support_comman_model.dart';
 import '../models/profile_model.dart';
 import '../models/saved_job_model.dart';
 import '../models/state_model.dart';
@@ -559,7 +565,15 @@ class ApiProvider {
     if (r.statusCode == 200) {
       var responseData = json.decode(r.body);
       var employeeId = responseData['loginemp']['id'];
+      var token = responseData['token'];
       //token
+      // Save employee ID and token
+      final storage = GetStorage();
+      storage.write("Id", employeeId);
+      storage.write("token", token);
+
+      print('Saved employeeId: $employeeId');
+      print('Saved token: $token');
 
       // Save user ID (assuming 'Id' is part of the response JSON)
       prefs.write("Id", employeeId);
@@ -575,9 +589,9 @@ class ApiProvider {
 
       return r;
     } else if (r.statusCode == 401) {
-      Get.snackbar('Message', r.body);
+      Get.snackbar('Message', 'Unauthorized: ${r.body}');
     } else {
-      Get.snackbar('Error', r.body);
+      Get.snackbar('Error', 'Error: ${r.body}');
     }
 
     return r;
@@ -611,6 +625,256 @@ class ApiProvider {
         print(
             "profileinfo: ${geetprofilepersonalmodel.data!.personalEmailAddress}");
         return geetprofilepersonalmodel;
+      } else {
+        print('Failed to load profile information');
+      }
+    } catch (error) {
+      print('profileedetaileror: $error');
+    }
+  }
+
+  ///profile basic_info_employee....6...
+
+  static PriofileBasicEmployeeApi() async {
+    var prefs = GetStorage();
+
+    // Read saved user id and token
+    userId = prefs.read("Id").toString();
+    print('wwwuseridEE: $userId');
+
+    token = prefs.read("token").toString();
+    print('token: $token');
+    var url = '${baseUrl}EmployeeApi/GetEmployeeBasicInfo';
+    try {
+      // Add the token to the headers
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      };
+
+      http.Response r = await http.get(Uri.parse(url), headers: headers);
+      if (r.statusCode == 200) {
+        print("url");
+        print(url);
+        BasicInformationModel? geetprofilepersonalmodel =
+            basicInformationModelFromJson(r.body);
+        print("profileinfo: ${geetprofilepersonalmodel.data!.employeeId}");
+        return geetprofilepersonalmodel;
+      } else {
+        print('Failed to load profile information');
+      }
+    } catch (error) {
+      print('profileedetaileror: $error');
+    }
+  }
+
+  ///profile bank_info_employee....7...
+
+  static PriofileBankDetailEmployeeApi() async {
+    var prefs = GetStorage();
+
+    // Read saved user id and token
+    userId = prefs.read("Id").toString();
+    print('wwwuseridEE: $userId');
+
+    token = prefs.read("token").toString();
+    print('token: $token');
+    var url = '${baseUrl}EmployeeApi/GetEmployeeBankdetail';
+    try {
+      // Add the token to the headers
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      };
+
+      http.Response r = await http.get(Uri.parse(url), headers: headers);
+      if (r.statusCode == 200) {
+        print("url");
+        print(url);
+        BankDetailInformationModel? geetprofilbankmodel =
+            bankDetailInformationModelFromJson(r.body);
+        print("profileinfobnk: ${geetprofilbankmodel.data!.accountHolderName}");
+        return geetprofilbankmodel;
+      } else {
+        print('Failed to load profile information');
+      }
+    } catch (error) {
+      print('profileedetaileror: $error');
+    }
+  }
+
+  ///offer_employee_appointment_api...8
+
+  static OfferAppointmentEmployeeApi() async {
+    var prefs = GetStorage();
+
+    // Read saved user id and token
+    userId = prefs.read("Id").toString();
+    print('wwwuseridEE: $userId');
+
+    token = prefs.read("token").toString();
+    print('token: $token');
+    var url = '${baseUrl}EmployeeApi/GetOfferAndAppointmentLeter';
+    try {
+      // Add the token to the headers
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      };
+
+      http.Response r = await http.get(Uri.parse(url), headers: headers);
+      if (r.statusCode == 200) {
+        print("url");
+        print(url);
+        GetOfferAppointmentModel? getapptoffermodel =
+            getOfferAppointmentModelFromJson(r.body);
+        print("profileinfobnk: ${getapptoffermodel.data!.offerletter}");
+        return getapptoffermodel;
+      } else {
+        print('Failed to load profile information');
+      }
+    } catch (error) {
+      print('profileedetaileror: $error');
+    }
+  }
+
+  /// Employee - Get all salary slips
+  static Future<AllsalaryslipModells?> getSalarySlips() async {
+    String userId = GetStorage().read("userId").toString();
+    String token = GetStorage().read("token").toString();
+    var url = "${baseUrl}EmployeeApi/GetAllEmpsalaryslip";
+
+    try {
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      };
+
+      http.Response response = await http.get(Uri.parse(url), headers: headers);
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        var allSalarySlipModels = allsalaryslipModellsFromJson(response.body);
+        return allSalarySlipModels;
+      } else {
+        print(
+            'Failed to load salary slips. Status code: ${response.statusCode}');
+        //Get.snackbar('Error', 'Failed to load salary slips');
+        return null;
+      }
+    } catch (error) {
+      print('Error: $error');
+      Get.snackbar('Error', 'An error occurred while fetching salary slips');
+      return null;
+    }
+  }
+
+  /// Employee - Get all salary slips
+  // static Future<DashbordModel?> getDashboardApi() async {
+  //   String? userId = GetStorage().read("userId")?.toString();
+  //   String? token = GetStorage().read("token")?.toString();
+  //
+  //   if (userId == null || token == null) {
+  //     Get.snackbar('Error', 'User ID or Token is missing');
+  //     return null;
+  //   }
+  //
+  //   var url = "${baseUrl}EmployeeApi/Dashboard";
+  //
+  //   try {
+  //     Map<String, String> headers = {
+  //       'Authorization': 'Bearer $token',
+  //       'Content-Type': 'application/json'
+  //     };
+  //
+  //     http.Response response = await http.get(Uri.parse(url), headers: headers);
+  //
+  //     print("Response status: ${response.statusCode}");
+  //     print("Response body: ${response.body}");
+  //
+  //     print("Responseurl: ${url}");
+  //
+  //     if (response.statusCode == 200) {
+  //       var allDashboardModels = dashbordModelFromJson(response.body);
+  //       return allDashboardModels;
+  //     } else if (response.statusCode == 401) {
+  //       Get.snackbar('Message', 'Unauthorized: ${response.body}');
+  //       // Clear token and navigate to login page
+  //       //GetStorage().remove('userId');
+  //       //GetStorage().remove('token');
+  //       //Get.offAll(() => Login());
+  //       return null;
+  //     } else {
+  //       Get.snackbar('Error',
+  //           'Failed to load Dashboard. Status code: ${response.statusCode}');
+  //       return null;
+  //     }
+  //   } catch (error) {
+  //     Get.snackbar(
+  //         'Error', 'An error occurred while fetching the dashboard: $error');
+  //     return null;
+  //   }
+  // }
+
+  static getDashboardApi() async {
+    var prefs = GetStorage();
+
+    // Read saved user id and token
+    userId = prefs.read("Id").toString();
+    print('wwwuseridEE: $userId');
+
+    token = prefs.read("token").toString();
+    print('token: $token');
+    var url = '${baseUrl}EmployeeApi/Dashboard';
+    try {
+      // Add the token to the headers
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      };
+
+      http.Response r = await http.get(Uri.parse(url), headers: headers);
+      if (r.statusCode == 200) {
+        print("url");
+        print(url);
+        DashbordModel? geetdashbord = dashbordModelFromJson(r.body);
+        print("profileinfobnk: ${geetdashbord.data?.completionPercentage!}");
+        return geetdashbord;
+      } else {
+        print('Failed to load dashboard');
+      }
+    } catch (error) {
+      print('profileedetaileror: $error');
+    }
+  }
+
+  ///support comman for both.....
+
+  static SupportUserEmployeeApi() async {
+    var prefs = GetStorage();
+
+    // Read saved user id and token
+    userId = prefs.read("Id").toString();
+    print('wwwuseridEE: $userId');
+
+    token = prefs.read("token").toString();
+    print('token: $token');
+    var url = '${baseUrl}App/ContactDetail';
+    try {
+      // Add the token to the headers
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      };
+
+      http.Response r = await http.get(Uri.parse(url));
+      if (r.statusCode == 200) {
+        print("url");
+        print(url);
+        //SupportModel supportModelFromJson
+        SupportModel? getsupportmodel = supportModelFromJson(r.body);
+        print("profileinfobnk: ${getsupportmodel.response!.id}");
+        return getsupportmodel;
       } else {
         print('Failed to load profile information');
       }

@@ -182,10 +182,12 @@ Container textField2({
   TextEditingController? controller,
   String? Function(String?)? validator,
   IconData? prefixIcon,
+  FocusNode? focusNode, // Added FocusNode
 }) {
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 10),
     child: TextFormField(
+      focusNode: focusNode, // Use FocusNode
       controller: controller,
       validator: validator,
       decoration: InputDecoration(
@@ -212,6 +214,45 @@ Container textField2({
     ),
   );
 }
+
+///
+//
+// Container textField2({
+//   String? hint,
+//   IconData? suffixIcon,
+//   TextEditingController? controller,
+//   String? Function(String?)? validator,
+//   IconData? prefixIcon,
+// }) {
+//   return Container(
+//     padding: const EdgeInsets.symmetric(vertical: 10),
+//     child: TextFormField(
+//       controller: controller,
+//       validator: validator,
+//       decoration: InputDecoration(
+//         labelText: hint,
+//         suffixIcon: suffixIcon != null
+//             ? Icon(
+//                 suffixIcon,
+//                 size: 23,
+//                 color: Colors.black12,
+//               )
+//             : null,
+//         prefixIcon: prefixIcon != null
+//             ? Icon(
+//                 prefixIcon,
+//                 size: 23,
+//                 color: Colors.black54,
+//               )
+//             : null,
+//         labelStyle: const TextStyle(color: Colors.black54, fontSize: 15),
+//         focusedBorder: const UnderlineInputBorder(
+//           borderSide: BorderSide(color: appColor),
+//         ),
+//       ),
+//     ),
+//   );
+// }
 
 textField(hint, icn) {
   return Container(
