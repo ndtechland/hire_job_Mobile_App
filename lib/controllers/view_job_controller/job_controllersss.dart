@@ -1,87 +1,128 @@
 import 'package:get/get.dart';
+import 'package:hirejobindia/models/all_jobs_model.dart';
 import 'package:hirejobindia/models/saved_job_model.dart';
+import 'package:hirejobindia/services_apis/api_servicesss.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../models/all_jobs_model.dart';
-import '../../services_apis/api_servicesss.dart'; // Import your ApiProvider
+import '../../models/job_list_bycat_id_model.dart';
 
 class AllJibsController extends GetxController {
   RxBool isLoading = true.obs;
-  //List<AllJobsApiModel> allJobs = [];
-
   AllJobsApiModel? allJobsApiModel;
   AllJobsSavedApiModel? savejobapimodel;
+  AllJobsbyCatIdModel? allJobsbyCatIdModel;
 
-  final ApiProvider _apiProvider = ApiProvider(); // Use ApiProvider instance
-  String searchQuery = "";
+  final ApiProvider _apiProvider = ApiProvider();
+  SharedPreferences? prefs;
+
+  RxList<JobResponse> foundJobs = RxList<JobResponse>([]);
+  RxList<JobResponseSaved> foundSavedJobs = RxList<JobResponseSaved>([]);
+
+  RxList<AllJobCatID> foundJobsbycatId = RxList<AllJobCatID>([]);
+
+  @override
+  void onInit() {
+    super.onInit();
+    initSharedPreferences();
+    jobListApi();
+    savedjobListApi();
+    jobListByCatIDApi();
+  }
+
+  Future<void> initSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+  }
 
   void jobListApi() async {
     isLoading(true);
-    allJobsApiModel = await ApiProvider.AllJobsApi();
-    print('Prince doctor list');
-    print(allJobsApiModel);
-    if (allJobsApiModel != null) {
-      //Get.to(() => TotalPrice());
+    try {
+      allJobsApiModel = await ApiProvider.AllJobsApi();
+      if (allJobsApiModel != null) {
+        foundJobs.value = allJobsApiModel!.response ?? [];
+      }
+    } finally {
       isLoading(false);
-      foundJobs.value = allJobsApiModel!.response!;
-      //Get.to(()=>Container());
     }
   }
 
   void savedjobListApi() async {
     isLoading(true);
-    savejobapimodel = await ApiProvider.AllSavedJobsApi();
-    print('Prince doctor list');
-    print(savejobapimodel);
-    if (savejobapimodel != null) {
-      //Get.to(() => TotalPrice());
+    try {
+      savejobapimodel = await ApiProvider.AllSavedJobsApi();
+      if (savejobapimodel != null) {
+        foundSavedJobs.value = savejobapimodel!.response ?? [];
+      }
+    } finally {
       isLoading(false);
-      foundSavedJobs.value = savejobapimodel!.response!;
-      //Get.to(()=>Container());
     }
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-    jobListApi();
-    savedjobListApi();
+  Future<void> jobListByCatIDApi([int? id]) async {
+    isLoading(true);
+    try {
+      allJobsbyCatIdModel = await ApiProvider.AllJobsbycatIDApi(id);
+      if (allJobsbyCatIdModel != null) {
+        foundJobsbycatId.value = allJobsbyCatIdModel!.response ?? [];
+      }
+    } finally {
+      isLoading(false);
+    }
   }
 
-  RxList<JobResponse> foundJobs = RxList<JobResponse>([]);
-  void filterDoctor(String searcjonName) {
+  void filterDoctor(String searchName) {
     List<JobResponse>? finalResult = [];
-    if (searcjonName.isEmpty) {
-      finalResult = allJobsApiModel!.response;
+    if (searchName.isEmpty) {
+      finalResult = allJobsApiModel?.response;
     } else {
-      finalResult = allJobsApiModel!.response!
-          .where((element) => element.jobTitle
+      finalResult = allJobsApiModel?.response
+          ?.where((element) => element.jobTitle
               .toString()
               .toLowerCase()
-              .contains(searcjonName.toString().toLowerCase().trim()))
-          .toList();
+              .contains(searchName.toLowerCase().trim()))
+          ?.toList();
     }
-    print(finalResult?.length);
-    foundJobs.value = finalResult!;
+    foundJobs.value = finalResult ?? [];
   }
 
-  RxList<JobResponseSaved> foundSavedJobs = RxList<JobResponseSaved>([]);
-  void filterSavedJob(String searchsavejobName) {
+  void filterSavedJob(String searchName) {
     List<JobResponseSaved>? finalResult = [];
-    if (searchsavejobName.isEmpty) {
-      finalResult = savejobapimodel!.response;
+    if (searchName.isEmpty) {
+      finalResult = savejobapimodel?.response;
     } else {
-      finalResult = savejobapimodel!.response!
-          .where((element) => element.jobTitle
+      finalResult = savejobapimodel?.response
+          ?.where((element) => element.jobTitle
               .toString()
               .toLowerCase()
-              .contains(searchsavejobName.toString().toLowerCase().trim()))
-          .toList();
+              .contains(searchName.toLowerCase().trim()))
+          ?.toList();
     }
-    print(finalResult?.length);
-    foundSavedJobs.value = finalResult!;
+    foundSavedJobs.value = finalResult ?? [];
   }
 
-  void applyForJob(AllJobsApiModel job) {
+  void filterjobrelatedJob(String searchName) {
+    List<AllJobCatID>? finalResult = [];
+    if (searchName.isEmpty) {
+      finalResult = allJobsbyCatIdModel?.response;
+    } else {
+      finalResult = allJobsbyCatIdModel?.response
+          ?.where((element) => element.jobTitle
+              .toString()
+              .toLowerCase()
+              .contains(searchName.toLowerCase().trim()))
+          ?.toList();
+    }
+    foundJobsbycatId.value = finalResult ?? [];
+  }
+
+  // Future<void> saveJobListId(String jobListId) async {
+  //   if (prefs != null) {
+  //     await prefs!.setString('JobListId1', jobListId);
+  //   } else {
+  //     throw Exception('SharedPreferences instance not initialized.');
+  //   }
+  // }
+
+  void applyForJob(JobResponse job) {
     // Implement apply for job functionality
   }
 }

@@ -104,33 +104,6 @@ class RegistrationPage extends StatelessWidget {
     }
   }
 
-  ///
-
-  // Future<void> _selectCVFile() async {
-  //   try {
-  //     FilePickerResult? result = await FilePicker.platform.pickFiles(
-  //       type: FileType.custom,
-  //       allowedExtensions: ['pdf'],
-  //       withData: true, // Ensure the file picker reads the file data
-  //     );
-  //     if (result != null && result.files.isNotEmpty) {
-  //       PlatformFile file = result.files.first;
-  //       print('Selected file: ${file.name}, path: ${file.path}');
-  //       if (file.bytes != null) {
-  //         _cvFilePathController.text = file.name;
-  //         _cvFileContent = file.bytes!;
-  //         print('File size: ${_cvFileContent!.length} bytes');
-  //       } else {
-  //         print('Failed to read file content: File bytes are null');
-  //       }
-  //     } else {
-  //       print('No file selected');
-  //     }
-  //   } catch (e) {
-  //     print('Error picking file: $e');
-  //   }
-  // }
-  ///
   var selectedDate = DateTime.now().obs;
 
   chooseDate() async {
@@ -163,40 +136,6 @@ class RegistrationPage extends StatelessWidget {
   }
 
   ///
-
-  // var selectedDate = DateTime.now().obs;
-  //
-  // chooseDate() async {
-  //   DateTime? newpickedDate = await showDatePicker(
-  //     context: Get.context!,
-  //     initialDate: selectedDate.value,
-  //     firstDate: DateTime(1900),
-  //     lastDate: DateTime.now(),
-  //     initialEntryMode: DatePickerEntryMode.input,
-  //     initialDatePickerMode: DatePickerMode.year,
-  //     helpText: 'Select DOB',
-  //     cancelText: 'Close',
-  //     confirmText: 'Confirm',
-  //     errorFormatText: 'Enter valid date',
-  //     errorInvalidText: 'Enter valid date range',
-  //     fieldLabelText: 'Selected Date',
-  //     //fieldHintText: 'Month/Date/Year',
-  //     //selectableDayPredicate: disableDate,
-  //   );
-  //   if (newpickedDate != null) {
-  //     selectedDate.value = newpickedDate;
-  //     _dateOfBirthController
-  //       ..text = DateFormat('yyyy-MM-d').format(selectedDate.value).toString()
-  //       ..selection = TextSelection.fromPosition(TextPosition(
-  //           offset: _dateOfBirthController.text.length,
-  //           affinity: TextAffinity.upstream));
-  //   }
-  //   // if (pickedDate != null && pickedDate != selectedDate) {
-  //   //   selectedDate.value = pickedDate;
-  //   //   appointmentController.text =
-  //   //       DateFormat('DD-MM-yyyy').format(selectedDate.value).toString();
-  //   // }
-  // }
 
   @override
   Widget build(BuildContext context) {

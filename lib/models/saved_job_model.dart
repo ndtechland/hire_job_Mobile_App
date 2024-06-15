@@ -38,7 +38,9 @@ class AllJobsSavedApiModel {
 
 class JobResponseSaved {
   int? id;
+  int? bookmarkid;
   String? jobTitle;
+  String? jobTitleid;
   num? noOfOpening;
   String? location;
   String? requiredExperience;
@@ -56,7 +58,9 @@ class JobResponseSaved {
 
   JobResponseSaved({
     this.id,
+    this.bookmarkid,
     this.jobTitle,
+    this.jobTitleid,
     this.noOfOpening,
     this.location,
     this.requiredExperience,
@@ -76,7 +80,10 @@ class JobResponseSaved {
   factory JobResponseSaved.fromJson(Map<String, dynamic> json) =>
       JobResponseSaved(
         id: json["id"],
+        bookmarkid: json["bookmarkid"],
         jobTitle: json["jobTitle"],
+        jobTitleid: json["jobTitleid"],
+        //jobTitleid
         noOfOpening: json["noOfOpening"],
         location: json["location"],
         requiredExperience: json["requiredExperience"],
@@ -96,7 +103,9 @@ class JobResponseSaved {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "bookmarkid": bookmarkid,
         "jobTitle": jobTitle,
+        "jobTitleid": jobTitleid,
         "noOfOpening": noOfOpening,
         "location": location,
         "requiredExperience": requiredExperience,

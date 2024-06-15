@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:hirejobindia/components/styles.dart';
 import 'package:http/http.dart' as http;
-import 'package:open_file/open_file.dart';
+//import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -59,7 +59,7 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
                     _isLoading = false;
                   });
                   // After successfully saving the file, open it
-                  openPdf(widget.file.path);
+                  /// openPdf(widget.file.path);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -133,7 +133,7 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
     }
   }
 
-  void openPdf(String filePath) {
-    OpenFile.open(filePath);
-  }
+  // void openPdf(String filePath) {
+  //   OpenFile.open(filePath);
+  // }
 }

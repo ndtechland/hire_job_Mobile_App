@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../components/styles.dart';
 import '../../../constants/static_text.dart';
 import '../../../controllers/home_page_controllerss/home_page_controllerss.dart';
+import '../../../controllers/job_list_by_cat_id_controller/job_detail_by_job_id_controller.dart';
 import '../../../controllers/view_job_controller/job_controllersss.dart';
 import '../../../widget/elevated_button.dart';
 import 'job_details.dart';
@@ -23,6 +24,9 @@ class ViewJobs extends StatelessWidget {
 
   AllJibsController _allJibsController = Get.put(AllJibsController());
   HomePageController _homePageController = Get.find();
+
+  JobdetauilsbyJobIdController _jobdetauilsbyJobIdController =
+      Get.put(JobdetauilsbyJobIdController());
 
   ///todo: i can remove anchor tag in flutter...24 may 2024..
 
@@ -180,22 +184,69 @@ class ViewJobs extends StatelessWidget {
                                                   GestureDetector(
                                                     onTap: () async {
                                                       isLoading.value = true;
-                                                      SharedPreferences prefs =
-                                                          await SharedPreferences
-                                                              .getInstance();
-                                                      prefs.setString(
-                                                          "JobListId",
-                                                          _allJibsController
-                                                              .foundJobs[index]
-                                                              .id
-                                                              .toString());
-                                                      print(
-                                                          "sadsad${_allJibsController.foundJobs[index].id.toString()}");
-                                                      await Future.delayed(
-                                                          Duration(seconds: 0));
-                                                      isLoading.value = false;
-                                                      await Get.to(
-                                                          JobDetails());
+
+                                                      try {
+                                                        // SharedPreferences
+                                                        //     prefs =
+                                                        //     await SharedPreferences
+                                                        //         .getInstance();
+
+                                                        // Save JobListId
+                                                        // String jobListId =
+                                                        //     _allJibsController
+                                                        //         .foundJobs[
+                                                        //             index]
+                                                        //         .id
+                                                        //         .toString();
+                                                        // await prefs.setString(
+                                                        //     "JobListId",
+                                                        //     jobListId);
+                                                        // print(
+                                                        //     "JobListId: $jobListId");
+
+                                                        // Save JobTitleid1
+                                                        // String jobTitleid =
+                                                        //     _allJibsController
+                                                        //             .foundJobs[
+                                                        //                 index]
+                                                        //             .jobTitleid ??
+                                                        //         "";
+                                                        // await prefs.setString(
+                                                        //     "JobTitleid1",
+                                                        //     jobTitleid);
+                                                        // print(
+                                                        //     "JobTitleid3: $jobTitleid");
+
+                                                        // await Future.delayed(
+                                                        //     Duration(
+                                                        //         milliseconds:
+                                                        //             200));
+                                                      } catch (e) {
+                                                        print("Error: $e");
+                                                      } finally {
+                                                        isLoading.value = false;
+                                                      }
+
+                                                      await _jobdetauilsbyJobIdController
+                                                          .jobdetailbyjobIdApi(
+                                                        jobListId:
+                                                            _allJibsController
+                                                                .foundJobs[
+                                                                    index]
+                                                                .id
+                                                                .toString(),
+                                                      );
+
+                                                      await _jobdetauilsbyJobIdController
+                                                          .relatedjobListApi(
+                                                        jobTitleid:
+                                                            _allJibsController
+                                                                .foundJobs[
+                                                                    index]
+                                                                .jobTitleid,
+                                                      );
+
+                                                      Get.to(JobDetails());
                                                     },
                                                     child: Container(
                                                       padding:
@@ -209,11 +260,11 @@ class ViewJobs extends StatelessWidget {
                                                         clipBehavior: Clip.none,
                                                         child: Image.network(
                                                           FixedText.imgurl +
-                                                              _allJibsController
-                                                                  .foundJobs[
-                                                                      index]
-                                                                  .companyImage
-                                                                  .toString(),
+                                                              (_allJibsController
+                                                                      .foundJobs[
+                                                                          index]
+                                                                      .companyImage ??
+                                                                  ""),
                                                           fit: BoxFit.fill,
                                                           errorBuilder:
                                                               (context, error,
@@ -303,7 +354,7 @@ class ViewJobs extends StatelessWidget {
                                                 padding:
                                                     const EdgeInsets.symmetric(
                                                         vertical: 8),
-                                                child: greyTextSmall(
+                                                child: greyTextSmall4(
                                                   stripHtmlTags(
                                                       _allJibsController
                                                               .foundJobs[index]

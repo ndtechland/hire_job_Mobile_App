@@ -6,19 +6,20 @@ import 'package:hirejobindia/modules/all_pages/pages/applied_jobs.dart';
 import 'package:hirejobindia/modules/all_pages/pages/bookmark.dart';
 import 'package:hirejobindia/modules/all_pages/pages/categories.dart';
 import 'package:hirejobindia/modules/all_pages/pages/company.dart';
-import 'package:hirejobindia/modules/all_pages/pages/notification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/responsive_text.dart';
+import '../controllers/employeee_controllersss/support_comman/support_commannn.dart';
 import '../controllers/home_page_controllerss/home_page_controllerss.dart';
 import '../controllers/login_controllers/login_controllersss.dart';
 import '../controllers/registrationss/registration_controller.dart';
 import '../controllers/user_profile_controller/user_profile_controller.dart';
 import '../controllers/view_job_controller/aaplied_job_controller.dart';
 import '../controllers/view_job_controller/saved_job_controller.dart';
+import '../modules/all_pages/pages/change_password.dart';
+import '../modules/all_pages/pages/emploree_pages/support_comman_page.dart';
 import '../modules/all_pages/pages/login.dart';
 import '../modules/all_pages/pages/profile.dart';
-import '../modules/all_pages/pages/registration_test.dart';
 
 class NavBar extends StatelessWidget {
   NavBar({Key? key}) : super(key: key);
@@ -30,6 +31,9 @@ class NavBar extends StatelessWidget {
   HomePageController _homePageController = Get.find();
   final RegistrationController _registrationController =
       Get.put(RegistrationController());
+
+  SupportEmployeeController _supportEmployeeController =
+      Get.put(SupportEmployeeController());
 
   final snackBarDuration = Duration(seconds: 3); // Define your desired duration
 
@@ -45,7 +49,7 @@ class NavBar extends StatelessWidget {
                 gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: <Color>[appColor2, appColor]),
+                    colors: <Color>[logoColor, logoColor]),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
@@ -193,31 +197,53 @@ class NavBar extends StatelessWidget {
             ///todo: end inbox and chat features.....
 
             ListTile(
-              leading: const Icon(Icons.inventory_outlined),
-              title: const Text('Invite Friend'),
+              leading: const Icon(Icons.password),
+              title: const Text('Change Password'),
               onTap: () async {
-                _registrationController.getStatepi();
-                _registrationController.onInit();
-                _registrationController.selectedState.value = null;
-                await Future.delayed(Duration(milliseconds: 800));
+                //  _supportEmployeeController.supportemployeeApi();
+                // _supportEmployeeController.update();
+                // _registrationController.getStatepi();
+                //_registrationController.onInit();
+                // _registrationController.selectedState.value = null;
+                // await Future.delayed(Duration(milliseconds: 800));
 
                 await Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => RegistrationPage()
+                    MaterialPageRoute(builder: (context) => ChangePassword()
                         //InviteFriend()
                         ));
               },
             ),
+
             ListTile(
-              leading: const Icon(Icons.notifications),
-              title: const Text('Notification'),
-              onTap: () {
-                Navigator.push(
+              leading: const Icon(Icons.support_agent),
+              title: const Text('Contact Us'),
+              onTap: () async {
+                await _supportEmployeeController.supportemployeeApi();
+                _supportEmployeeController.update();
+                // _registrationController.getStatepi();
+                //_registrationController.onInit();
+                // _registrationController.selectedState.value = null;
+                await Future.delayed(Duration(milliseconds: 800));
+
+                await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const NotificationScreen()));
+                        builder: (context) => SupportViewHirejobComman()
+                        //InviteFriend()
+                        ));
               },
             ),
+            // ListTile(
+            //   leading: const Icon(Icons.notifications),
+            //   title: const Text('Notification'),
+            //   onTap: () {
+            //     Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //             builder: (context) => const NotificationScreen()));
+            //   },
+            // ),
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Log Out'),

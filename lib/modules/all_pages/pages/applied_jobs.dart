@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hirejobindia/widget/elevated_button.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../components/styles.dart';
 import '../../../constants/static_text.dart';
 import '../../../controllers/home_page_controllerss/home_page_controllerss.dart';
+import '../../../controllers/job_list_by_cat_id_controller/job_detail_by_job_id_controller.dart';
 import '../../../controllers/view_job_controller/aaplied_job_controller.dart';
 import 'home.dart';
 import 'job_details.dart';
@@ -21,6 +21,8 @@ class AppliedJobs extends StatelessWidget {
 
   AllAppliedJobController _allappliedController = Get.find();
   HomePageController _homePageController = Get.find();
+  JobdetauilsbyJobIdController _jobdetauilsbyJobIdController =
+      Get.put(JobdetauilsbyJobIdController());
 
   ///todo: i can remove anchor tag in flutter...24 may 2024..
 
@@ -187,21 +189,41 @@ class AppliedJobs extends StatelessWidget {
                                                   GestureDetector(
                                                     onTap: () async {
                                                       isLoading.value = true;
-                                                      SharedPreferences prefs =
-                                                          await SharedPreferences
-                                                              .getInstance();
-                                                      prefs.setString(
-                                                          "JobListId",
-                                                          _allappliedController
-                                                              .foundappliedJobs[
-                                                                  index]
-                                                              .id
-                                                              .toString());
-                                                      print(
-                                                          "sadsad${_allappliedController.foundappliedJobs[index].id.toString()}");
+                                                      // SharedPreferences prefs =
+                                                      //     await SharedPreferences
+                                                      //         .getInstance();
+                                                      // prefs.setString(
+                                                      //     "JobListId",
+                                                      //     _allappliedController
+                                                      //         .foundappliedJobs[
+                                                      //             index]
+                                                      //         .id
+                                                      //         .toString());
+                                                      // print(
+                                                      //     "sadsad${_allappliedController.foundappliedJobs[index].id.toString()}");
                                                       await Future.delayed(
                                                           Duration(seconds: 0));
                                                       isLoading.value = false;
+
+                                                      await _jobdetauilsbyJobIdController
+                                                          .jobdetailbyjobIdApi(
+                                                        jobListId:
+                                                            _allappliedController
+                                                                .foundappliedJobs![
+                                                                    index]
+                                                                .id
+                                                                .toString(),
+                                                      );
+
+                                                      await _jobdetauilsbyJobIdController
+                                                          .relatedjobListApi(
+                                                        jobTitleid:
+                                                            _allappliedController
+                                                                .foundappliedJobs[
+                                                                    index]
+                                                                .jobTitleid,
+                                                      );
+
                                                       await Get.to(
                                                           JobDetails());
                                                     },
@@ -311,7 +333,7 @@ class AppliedJobs extends StatelessWidget {
                                                 padding:
                                                     const EdgeInsets.symmetric(
                                                         vertical: 8),
-                                                child: greyTextSmall(
+                                                child: greyTextSmall4(
                                                   stripHtmlTags(
                                                       _allappliedController
                                                               .foundappliedJobs[

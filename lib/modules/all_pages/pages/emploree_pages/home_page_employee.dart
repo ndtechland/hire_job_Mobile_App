@@ -10,14 +10,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../components/responsive_text.dart';
 import '../../../../controllers/employeee_controllersss/employee_dashboard_controller/employee_dashboardcontroller.dart';
 import '../../../../controllers/employeee_controllersss/employee_login_controllers/employee_login_controllers.dart';
+import '../../../../controllers/employeee_controllersss/support_comman/support_commannn.dart';
 import '../../../../controllers/user_profile_controller/user_profile_controller.dart';
 import '../login.dart';
 
-EmployeeLoginController _employeeloginController =
-    Get.put(EmployeeLoginController());
-
 HomedashboardController _homedashboardController =
     Get.put(HomedashboardController());
+
+SupportEmployeeController _supportEmployeeController =
+    Get.put(SupportEmployeeController());
 
 class HomeEmployee extends StatelessWidget {
   final RxBool isLoading = false.obs;
@@ -50,6 +51,10 @@ class HomeEmployee extends StatelessWidget {
     'Current Month Attendance',
     'Support',
   ];
+  EmployeeLoginController _employeeloginController =
+      Get.put(EmployeeLoginController());
+
+  final snackBarDuration = Duration(seconds: 3); // Define your desired duration
 
   final ProfileController _profileController = Get.put(ProfileController());
 
@@ -92,18 +97,37 @@ class HomeEmployee extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () async {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                );
                 _employeeloginController.onInit();
 
                 await Future.delayed(Duration(seconds: 1));
 
-                await SharedPreferences.getInstance()
-                    .then((prefs) => prefs.clear());
+                SharedPreferences.getInstance().then((prefs) => prefs.clear());
 
                 // Hide loading dialog
                 Get.back();
 
+                // Navigator.push(
+                //     context, MaterialPageRoute(builder: (context) => Login()));
+
                 // Navigate to login screen
-                await Get.offAll(() => Login());
+                Get.offAll(() => Login());
+                // Show success snackbar
+                Get.snackbar(
+                  'Success',
+                  'Successfully logged out',
+                  snackPosition: SnackPosition.TOP,
+                  backgroundColor: Colors.green,
+                  duration: snackBarDuration, // Set the duration
+                );
                 // Start the timer
                 // Timer(Duration(seconds: 2), () async {
                 //   final accountData = await accountService.getAccountData;
@@ -683,7 +707,11 @@ class HomeEmployee extends StatelessWidget {
                       child: Container(
                           margin: const EdgeInsets.all(8),
                           child: GestureDetector(
-                            onTap: () {
+                            onTap: () async {
+                              _supportEmployeeController.supportemployeeApi();
+                              _supportEmployeeController.update();
+                              await Future.delayed(Duration(milliseconds: 800));
+
                               Get.to(SupportViewHirejobComman());
 
                               //Navigator.push(

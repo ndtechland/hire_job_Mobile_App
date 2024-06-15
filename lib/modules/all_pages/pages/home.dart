@@ -15,8 +15,10 @@ import '../../../components/responsive_text.dart';
 import '../../../constants/static_text.dart';
 import '../../../controllers/catagory_controllerss/get_catagory_controller.dart';
 import '../../../controllers/company_controllers/company_controller.dart';
+import '../../../controllers/company_detail_by_com_id/company_detail_by_id_controller.dart';
 import '../../../controllers/employee_controller/profile_controller/profile_info_employee_controller.dart';
 import '../../../controllers/home_page_controllerss/home_page_controllerss.dart';
+import '../../../controllers/job_list_by_cat_id_controller/job_detail_by_job_id_controller.dart';
 import '../../../controllers/testimonial_controllerr/testimonial_controllersss.dart';
 import '../../../controllers/user_profile_controller/user_profile_controller.dart';
 import '../../../controllers/view_job_controller/job_controllersss.dart';
@@ -65,6 +67,7 @@ class _HomeState extends State<Home> {
 
   AllcatagoryController _allcatagoryController =
       Get.put(AllcatagoryController());
+
   AllcompanyController _allcompanyController = Get.put(AllcompanyController());
 
   HomePageController _homePageController = Get.put(HomePageController());
@@ -77,6 +80,12 @@ class _HomeState extends State<Home> {
       Get.put(ProfileEmployeeController());
 
   ProfileController _profileController = Get.find();
+
+  JobdetauilsbyJobIdController _jobdetauilsbyJobIdController =
+      Get.put(JobdetauilsbyJobIdController());
+
+  CompanyDetailController _companyDetailController =
+      Get.put(CompanyDetailController());
 
   String stripHtmlTags(String htmlString) {
     final RegExp exp = RegExp(r'<[^>]*>', multiLine: true, caseSensitive: true);
@@ -130,8 +139,8 @@ class _HomeState extends State<Home> {
                 // Add your onPressed logic here
               },
               text: "E-Login",
-              backgroundColor: Colors.white,
-              textColor: appColor,
+              backgroundColor: logoColor,
+              textColor: Colors.white,
               elevation: 2,
               borderRadius: 15,
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 9),
@@ -367,20 +376,63 @@ class _HomeState extends State<Home> {
                                         GestureDetector(
                                           onTap: () async {
                                             isLoading.value = true;
-                                            SharedPreferences prefs =
-                                                await SharedPreferences
-                                                    .getInstance();
-                                            prefs.setString(
-                                                "JobListId",
-                                                _allJibsController
-                                                    .foundJobs[index].id
-                                                    .toString());
-                                            print(
-                                                "sadsad${_allJibsController.foundJobs[index].id.toString()}");
-                                            await Future.delayed(
-                                                Duration(seconds: 0));
-                                            isLoading.value = false;
-                                            await Get.to(JobDetails());
+
+                                            try {
+                                              // SharedPreferences
+                                              //     prefs =
+                                              //     await SharedPreferences
+                                              //         .getInstance();
+
+                                              // Save JobListId
+                                              // String jobListId =
+                                              //     _allJibsController
+                                              //         .foundJobs[
+                                              //             index]
+                                              //         .id
+                                              //         .toString();
+                                              // await prefs.setString(
+                                              //     "JobListId",
+                                              //     jobListId);
+                                              // print(
+                                              //     "JobListId: $jobListId");
+
+                                              // Save JobTitleid1
+                                              // String jobTitleid =
+                                              //     _allJibsController
+                                              //             .foundJobs[
+                                              //                 index]
+                                              //             .jobTitleid ??
+                                              //         "";
+                                              // await prefs.setString(
+                                              //     "JobTitleid1",
+                                              //     jobTitleid);
+                                              // print(
+                                              //     "JobTitleid3: $jobTitleid");
+
+                                              // await Future.delayed(
+                                              //     Duration(
+                                              //         milliseconds:
+                                              //             200));
+                                            } catch (e) {
+                                              print("Error: $e");
+                                            } finally {
+                                              isLoading.value = false;
+                                            }
+
+                                            _jobdetauilsbyJobIdController
+                                                .jobdetailbyjobIdApi(
+                                              jobListId: _allJibsController
+                                                  .foundJobs[index].id
+                                                  .toString(),
+                                            );
+
+                                            _jobdetauilsbyJobIdController
+                                                .relatedjobListApi(
+                                              jobTitleid: _allJibsController
+                                                  .foundJobs[index].jobTitleid,
+                                            );
+
+                                            Get.to(JobDetails());
                                           },
                                           child: Container(
                                             padding: const EdgeInsets.only(
@@ -391,10 +443,10 @@ class _HomeState extends State<Home> {
                                               clipBehavior: Clip.none,
                                               child: Image.network(
                                                 FixedText.imgurl +
-                                                    _allJibsController
-                                                        .foundJobs[index]
-                                                        .companyImage
-                                                        .toString(),
+                                                    (_allJibsController
+                                                            .foundJobs[index]
+                                                            .companyImage ??
+                                                        ""),
                                                 fit: BoxFit.fill,
                                                 errorBuilder: (context, error,
                                                     stackTrace) {
@@ -411,6 +463,62 @@ class _HomeState extends State<Home> {
                                             ),
                                           ),
                                         ),
+
+                                        ///
+                                        // GestureDetector(
+                                        //   onTap: () async {
+                                        //     isLoading.value = true;
+                                        //     SharedPreferences prefs =
+                                        //         await SharedPreferences
+                                        //             .getInstance();
+                                        //     prefs.setString(
+                                        //         "JobListId",
+                                        //         _allJibsController
+                                        //             .foundJobs[index].id
+                                        //             .toString());
+                                        //     print(
+                                        //         "sadsad${_allJibsController.foundJobs[index].id.toString()}");
+                                        //     await Future.delayed(
+                                        //         Duration(seconds: 0));
+                                        //     isLoading.value = false;
+                                        //
+                                        //     await _jobdetauilsbyJobIdController
+                                        //         .jobdetailbyjobIdApi();
+                                        //     await _jobdetauilsbyJobIdController
+                                        //         .relatedjobListApi();
+                                        //     _jobdetauilsbyJobIdController
+                                        //         .update();
+                                        //     await Get.to(JobDetails());
+                                        //   },
+                                        //   child: Container(
+                                        //     padding: const EdgeInsets.only(
+                                        //         right: 10),
+                                        //     height: textfieldHeight * 0.26,
+                                        //     width: textfieldWidth * 0.19,
+                                        //     child: ClipOval(
+                                        //       clipBehavior: Clip.none,
+                                        //       child: Image.network(
+                                        //         FixedText.imgurl +
+                                        //             _allJibsController
+                                        //                 .foundJobs[index]
+                                        //                 .companyImage
+                                        //                 .toString(),
+                                        //         fit: BoxFit.fill,
+                                        //         errorBuilder: (context, error,
+                                        //             stackTrace) {
+                                        //           return ClipOval(
+                                        //             child: Image.asset(
+                                        //               'lib/assets/logo/noimageavlble.jpg',
+                                        //               width: 30,
+                                        //               height: 30,
+                                        //               fit: BoxFit.cover,
+                                        //             ),
+                                        //           );
+                                        //         },
+                                        //       ),
+                                        //     ),
+                                        //   ),
+                                        // ),
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment:
@@ -471,7 +579,7 @@ class _HomeState extends State<Home> {
                                     Container(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 8),
-                                      child: greyTextSmall(
+                                      child: greyTextSmall4(
                                         stripHtmlTags(_allJibsController
                                                 .foundJobs[index].skills ??
                                             "No skills listed"),
@@ -526,10 +634,10 @@ class _HomeState extends State<Home> {
                     children: [
                       blackHeadingSmall('Companies'.toUpperCase()),
                       GestureDetector(
-                          onTap: () {
-                            _allcompanyController.companyListApi();
+                          onTap: () async {
+                            await _allcompanyController.companyListApi();
                             _allcompanyController.update();
-                            Navigator.push(
+                            await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => Company()));
@@ -547,7 +655,7 @@ class _HomeState extends State<Home> {
                         return Center(child: CircularProgressIndicator());
                       }
                       if (_allcompanyController.foundcompany.isEmpty) {
-                        return Center(child: Text('No categories found'));
+                        return Center(child: Text('No Company found'));
                       }
                       return Row(
                         children:
@@ -643,34 +751,34 @@ class _HomeState extends State<Home> {
                     }),
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      blackHeadingSmall('Featured jobs'.toUpperCase()),
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ViewJobs()));
-                          },
-                          child: appcolorText('See All'))
-                    ],
-                  ),
-                ),
-                SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: 2,
-                      physics: const ScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (context, i) => Column(
-                        children: [_buildJobs()],
-                      ),
-                    )),
+                // Container(
+                //   padding: const EdgeInsets.symmetric(horizontal: 16),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       blackHeadingSmall('Featured jobs'.toUpperCase()),
+                //       GestureDetector(
+                //           onTap: () {
+                //             Navigator.push(
+                //                 context,
+                //                 MaterialPageRoute(
+                //                     builder: (context) => ViewJobs()));
+                //           },
+                //           child: appcolorText('See All'))
+                //     ],
+                //   ),
+                // ),
+                // SingleChildScrollView(
+                //     padding: const EdgeInsets.symmetric(vertical: 8),
+                //     child: ListView.builder(
+                //       padding: EdgeInsets.zero,
+                //       itemCount: 2,
+                //       physics: const ScrollPhysics(),
+                //       shrinkWrap: true,
+                //       itemBuilder: (context, i) => Column(
+                //         children: [_buildJobs()],
+                //       ),
+                //     )),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
@@ -699,7 +807,7 @@ class _HomeState extends State<Home> {
                         return Center(child: CircularProgressIndicator());
                       }
                       if (_alltestimonialController.foundtestmonial.isEmpty) {
-                        return Center(child: Text('No categories found'));
+                        return Center(child: Text('No Testimonial found'));
                       }
                       return Row(
                         children: _alltestimonialController.foundtestmonial
@@ -830,7 +938,7 @@ class _HomeState extends State<Home> {
                                     //     greyTextSmall('4.0 (1001 Reviews)'),
                                     //   ],
                                     // ),
-                                    const SizedBox(height: 4),
+                                    const SizedBox(height: 2),
                                     greyTextSmall3(stripHtmlTags(
                                         testgimonial?.paragraph ?? 'Not Found'))
                                   ],

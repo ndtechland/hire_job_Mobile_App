@@ -27,13 +27,13 @@ class AllSavedJobController extends GetxController {
   }
 
   ///todo: delete job api....
-  void deleteJob(int jobId) async {
+  void deleteJob(int bookmarkid) async {
     isLoading(true);
-    bool success = await ApiProvider.deleteJobApi(jobId);
+    bool success = await ApiProvider.deleteJobApi(bookmarkid);
     isLoading(false);
 
     if (success) {
-      foundSavedJobs.removeWhere((job) => job.id == jobId);
+      foundSavedJobs.removeWhere((job) => job.bookmarkid == bookmarkid);
       Get.snackbar('Success', 'Job deleted successfully');
     } else {
       Get.snackbar('Error', 'Failed to delete job');

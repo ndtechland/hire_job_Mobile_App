@@ -38,6 +38,7 @@ class AllJobsApiModel {
 class JobResponse {
   int? id;
   String? jobTitle;
+  String? jobTitleid;
   num? noOfOpening;
   String? location;
   String? requiredExperience;
@@ -56,6 +57,7 @@ class JobResponse {
   JobResponse({
     this.id,
     this.jobTitle,
+    this.jobTitleid,
     this.noOfOpening,
     this.location,
     this.requiredExperience,
@@ -75,6 +77,7 @@ class JobResponse {
   factory JobResponse.fromJson(Map<String, dynamic> json) => JobResponse(
         id: json["id"],
         jobTitle: json["jobTitle"],
+        jobTitleid: json["jobTitleid"],
         noOfOpening: json["noOfOpening"],
         location: json["location"],
         requiredExperience: json["requiredExperience"],
@@ -95,6 +98,7 @@ class JobResponse {
   Map<String, dynamic> toJson() => {
         "id": id,
         "jobTitle": jobTitle,
+        "jobTitleid": jobTitleid,
         "noOfOpening": noOfOpening,
         "location": location,
         "requiredExperience": requiredExperience,

@@ -39,9 +39,9 @@ class EmployeeLoginController extends GetxController {
 
         final accountData2 = employeeLoginFromJson(response.body);
         await accountService2.setAccountData2(accountData2);
-        _homedashboardController.dashboarddApi();
+        await _homedashboardController.dashboarddApi();
 
-        Get.to(() => HomeEmployee());
+        Get.off(() => HomeEmployee());
       } else {
         Get.snackbar('Error', 'Failed to login. Please try again.');
       }
@@ -53,6 +53,7 @@ class EmployeeLoginController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+    isLoading.value = false;
   }
 
   @override

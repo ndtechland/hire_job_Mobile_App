@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hirejobindia/components/styles.dart';
 import 'package:hirejobindia/modules/all_pages/pages/emploree_pages/profile_employee/profile_employee.dart';
+import 'package:hirejobindia/modules/all_pages/pages/emploree_pages/profile_employee/update_add_profile/update_add_profile_info.dart';
 import 'package:hirejobindia/modules/all_pages/pages/emploree_pages/salary_slip_view.dart';
 import 'package:hirejobindia/modules/all_pages/pages/login.dart';
 import 'package:http/http.dart' as http;
@@ -15,18 +17,26 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../components/responsive_text.dart';
+import '../../../../constants/app_colorss/app_colorss.dart';
+import '../../../../constants/reusable_customdilog.dart';
 import '../../../../constants/static_text.dart';
 import '../../../../controllers/employee_controller/profile_controller/profile_info_employee_controller.dart';
 import '../../../../controllers/employeee_controllersss/employee_login_controllers/employee_login_controllers.dart';
 import '../../../../controllers/employeee_controllersss/employee_offer_appointment/offer_apt_employee_controller.dart';
 import '../../../../controllers/employeee_controllersss/salary_slip_controller/salary_slip_controllerss.dart';
+import '../../../../controllers/employeee_controllersss/support_comman/support_commannn.dart';
 import '../view_pdf_only.dart';
+import 'change_password_employee.dart';
+import 'leaves_employee/multiple_day.dart';
+import 'leaves_employee/single_day.dart';
 
 class EmployeeNavBar extends StatelessWidget {
   EmployeeNavBar({Key? key}) : super(key: key);
 
   AptOfferEmployeeController _aptOfferEmployeeController =
       Get.put(AptOfferEmployeeController());
+  final ProfileEmployeeController _getprofileebnk =
+      Get.put(ProfileEmployeeController());
 
   ProfileEmployeeController _profileEmployeeController =
       Get.put(ProfileEmployeeController());
@@ -36,6 +46,9 @@ class EmployeeNavBar extends StatelessWidget {
 
   AllSalarySlipController _allsalaryslipController =
       Get.put(AllSalarySlipController());
+
+  SupportEmployeeController _supportEmployeeController =
+      Get.put(SupportEmployeeController());
 
   //AllSavedJobController _savedJobController = Get.put(AllSavedJobController());
   // AllAppliedJobController _allappliedController =
@@ -91,7 +104,8 @@ class EmployeeNavBar extends StatelessWidget {
                                       ?.profileImage !=
                                   null
                               ? Image.network(
-                                  "${FixedText.apiurl2}${_profileEmployeeController.getprofileemployeeModel?.data?.profileImage}",
+                                  // "${FixedText.apiurl2}"
+                                  "${_profileEmployeeController.getprofileemployeeModel?.data?.profileImage}",
                                   //color: appColor,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
@@ -176,6 +190,27 @@ class EmployeeNavBar extends StatelessWidget {
             ),
 
             ListTile(
+              leading: const Icon(Icons.edit_outlined),
+              title: const Text('Add/Update Profile'),
+              onTap: () async {
+                await _profileEmployeeController.profileemployeeApi();
+                await _profileEmployeeController.profileBasicemployeeApi();
+                await _profileEmployeeController.profileEmployeBankApi();
+
+                //profileBasicemployeeApi();
+                //     profileEmployeBankApi();
+
+                _profileEmployeeController.update();
+                // await _profileController.profileApi();
+                // _profileController.update();
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EmployeeUpdateProfile()));
+              },
+            ),
+
+            ListTile(
               leading: const Icon(Icons.save_alt_sharp),
               title: const Text('Salary Slip'),
               onTap: () async {
@@ -189,6 +224,7 @@ class EmployeeNavBar extends StatelessWidget {
               leading: const Icon(Icons.done_all),
               title: const Text('Apply For Leaves'),
               onTap: () {
+                showdilogleave(context);
                 // Navigator.push(context,
                 //     MaterialPageRoute(builder: (context) => Company()));
               },
@@ -425,6 +461,27 @@ class EmployeeNavBar extends StatelessWidget {
             //     //     ));
             //   },
             // ),
+
+            ListTile(
+              leading: const Icon(Icons.password),
+              title: const Text('Change Password'),
+              onTap: () async {
+                //  _supportEmployeeController.supportemployeeApi();
+                // _supportEmployeeController.update();
+                // _registrationController.getStatepi();
+                //_registrationController.onInit();
+                // _registrationController.selectedState.value = null;
+                // await Future.delayed(Duration(milliseconds: 800));
+
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChangeEmployeePassword()
+                        //InviteFriend()
+                        ));
+              },
+            ),
+
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Log Out'),
@@ -448,10 +505,10 @@ class EmployeeNavBar extends StatelessWidget {
                     .then((prefs) => prefs.clear());
 
                 // Hide loading dialog
-                Get.back();
+                //Get.back();
 
                 // Navigate to login screen
-                await Get.offAll(() => Login());
+                Get.offAll(() => Login());
 
                 // Show success snackbar
                 // Get.snackbar(
@@ -508,4 +565,63 @@ class EmployeeNavBar extends StatelessWidget {
           ),
         ),
       );
+
+  ///dilog box
+  showdilogleave(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    showCupertinoDialog(
+      barrierDismissible: true, // Set barrierDismissible to true
+      context: context,
+      builder: (BuildContext context) {
+        return ReusableCustomDialog(
+          contentColor: AppColors.black,
+          titleColor: Colors.white,
+          titleFontSize:
+              size.height * 0.019, // Use provided or default font size
+
+          additionalTextColor1: Colors.red,
+          //additionalTextColor2: Colors.red,
+          titleText: "Select Leave Type",
+          //contentText
+          //contentText: '',
+          //additionalText1: "First Half",
+          //additionalText2: "Second Half",
+          // additionalText3: "Full Day",
+          additionalText1OnTap: () {},
+          additionalText2OnTap: () {},
+          additionalText3OnTap: () {},
+
+          cancelText: "Single Day Leave", //onCancelPressed
+
+          submitText: 'Multiple Day Leave', //onSubmitPressed
+          submitText2: 'Other Leave', //onSubmit2Pressed
+
+          // onCancelPressed: () {
+          //   Get.back();
+          // },
+          //  final VoidCallback onCancelPressed;
+          //   final VoidCallback onSubmitPressed;
+          //   final VoidCallback onSubmit2Pressed;
+          onSubmitPressed: () {
+            //Get.back();
+            Get.to(MultipleDayLeavePage());
+            //Get.back();
+          },
+
+          onSubmit2Pressed: () {
+            //Get.to(MultipleDayLeavePage());
+
+            //Get.back();
+
+            //Get.to(DecreaseLoad1());
+            //Get.back();
+          },
+          // onCancelPressedCallback: () {},
+          onCancelPressed: () {
+            Get.to(SingleDayLeavePage());
+          },
+        );
+      },
+    );
+  }
 }

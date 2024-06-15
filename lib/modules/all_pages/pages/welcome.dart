@@ -41,7 +41,7 @@ class _WelcomeState extends State<Welcome> {
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: <Color>[appColor2, appColor]),
+                colors: <Color>[logoColor, logoColor]),
           ),
         ),
         elevation: 0,
@@ -95,7 +95,7 @@ class _WelcomeState extends State<Welcome> {
 
                     'Login with US',
                     //linkedinColor
-                    appColor),
+                    logoColor),
               ],
             ),
           ],

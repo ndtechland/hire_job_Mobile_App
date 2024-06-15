@@ -7,6 +7,8 @@ import 'package:hirejobindia/controllers/nav_bar_controller/nav_controller.dart'
 import 'package:hirejobindia/modules/components/styles.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'controllers/company_controllers/company_controller.dart';
+import 'controllers/company_detail_by_com_id/company_detail_by_id_controller.dart';
 import 'controllers/employeee_controllersss/employee_dashboard_controller/employee_dashboardcontroller.dart';
 import 'controllers/user_profile_controller/user_profile_controller.dart';
 import 'controllers/view_job_controller/job_controllersss.dart';
@@ -63,6 +65,11 @@ class MyApp extends StatelessWidget {
         Get.lazyPut<AllJibsController>(() => AllJibsController());
         Get.lazyPut<ProfileController>(() => ProfileController());
         Get.lazyPut<HomedashboardController>(() => HomedashboardController());
+        Get.lazyPut<AllJibsController>(() => AllJibsController());
+        Get.lazyPut<CompanyDetailController>(() => CompanyDetailController());
+        Get.lazyPut<AllcompanyController>(() => AllcompanyController());
+        // AllcompanyController _allcompanyController = Get.find();
+        //   CompanyDetailController _companyDetailController = Get.find();
 
         //HomedashboardController
       }),

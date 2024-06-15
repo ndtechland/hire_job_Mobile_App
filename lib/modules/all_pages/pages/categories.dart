@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hirejobindia/components/styles.dart';
-import 'package:hirejobindia/modules/all_pages/pages/company_detail.dart';
 
 import '../../../components/responsive_text.dart';
 import '../../../constants/static_text.dart';
 import '../../../controllers/catagory_controllerss/get_catagory_controller.dart';
+import '../../../controllers/home_page_controllerss/home_page_controllerss.dart';
+import '../../../controllers/view_job_controller/job_controllersss.dart';
+import 'company_list_by_catagory_id.dart';
 
 class Categories extends StatelessWidget {
   final RxBool isLoading = false.obs;
@@ -14,6 +16,9 @@ class Categories extends StatelessWidget {
 
   Categories({Key? key}) : super(key: key);
   final AllcatagoryController _allcatagoryController = Get.find();
+
+  AllJibsController _allJibsController = Get.put(AllJibsController());
+  HomePageController _homePageController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -131,12 +136,16 @@ class Categories extends StatelessWidget {
                                         .foundcategory[index];
                                     if (category == null) return Container();
                                     return GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
+                                      onTap: () async {
+                                        _allJibsController.jobListByCatIDApi(
+                                            category.id.toInt());
+                                        _allJibsController.update();
+                                        await Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                const CompanyDetail(),
+                                                ViewJobListOnID(),
+                                            //const CompanyDetail(),
                                           ),
                                         );
                                       },

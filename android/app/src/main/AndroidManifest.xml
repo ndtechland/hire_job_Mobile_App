@@ -7,10 +7,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <!--uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /-->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.hardware.location.gps" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <!--uses-permission android:name="android.hardware.location.gps" /-->
+    <!--uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
@@ -66,9 +66,9 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-       <meta-data android:name="com.google.android.geo.API_KEY"
+       <!--meta-data android:name="com.google.android.geo.API_KEY"
 
-           android:value="AIzaSyBrbWFXlOYpaq51wteSyFS2UjdMPOWBlQw"/>
+           android:value="AIzaSyBrbWFXlOYpaq51wteSyFS2UjdMPOWBlQw"/-->
        <provider
            android:name="androidx.core.content.FileProvider"
            android:authorities="${applicationId}.fileprovider"

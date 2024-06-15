@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hirejobindia/components/styles.dart';
 import 'package:hirejobindia/constants/static_text.dart';
-import 'package:hirejobindia/modules/all_pages/pages/company_detail.dart';
 
 import '../../../components/responsive_text.dart';
 import '../../../controllers/company_controllers/company_controller.dart';
+import '../../../controllers/company_detail_by_com_id/company_detail_by_id_controller.dart';
 import 'chat.dart';
+import 'company_detail.dart';
 
 class Company extends StatelessWidget {
   static const String id = 'Company';
@@ -27,6 +28,26 @@ class Company extends StatelessWidget {
   ];
 
   AllcompanyController _allcompanyController = Get.find();
+  CompanyDetailController _companyDetailController = Get.find();
+  bool _isLoading = false; // State variable to control loading indicator
+
+  void _startDelayedAction(BuildContext context) {
+    // Simulate delayed action
+    Future.delayed(Duration(milliseconds: 400), () {
+      print('Delayed action after 1 second');
+
+      // Navigate to CompanyDetail after delay
+      Get.to(CompanyDetail());
+
+      // Alternatively, if using Navigator.push:
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => CompanyDetail(),
+      //   ),
+      // );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +61,9 @@ class Company extends StatelessWidget {
         title: const Text('Companies'),
         centerTitle: true,
         titleSpacing: 0,
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-        ],
+        // actions: [
+        //   IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+        // ],
         flexibleSpace: Container(
           height: double.infinity,
           width: double.infinity,
@@ -145,13 +166,49 @@ class Company extends StatelessWidget {
                                     if (category == null) return Container();
                                     return GestureDetector(
                                       onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const CompanyDetail(),
-                                          ),
-                                        );
+                                        _allcompanyController.companyListApi();
+                                        _allcompanyController.update();
+
+                                        // _companyDetailController.companydetailbyIdApi(
+                                        //     category.id
+                                        // );
+                                        _companyDetailController
+                                            .companydetailbyIdApi(
+                                                _allcompanyController
+                                                    .foundcompany[index].id
+                                                    ?.toInt());
+                                        _companyDetailController.update();
+
+                                        // Delay execution for 2 seconds
+                                        Future.delayed(
+                                            Duration(milliseconds: 00), () {
+                                          _startDelayedAction(context);
+                                          print(
+                                              'Delayed action after 2 seconds');
+                                          // Get.to(CompanyDetail());
+                                          // Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //     builder: (context) =>
+                                          //         CompanyDetail(),
+                                          //   ),
+                                          // );
+                                          // Add your code here that you want to execute after the delay
+                                        });
+                                        // Future.delayed(Duration(seconds: 2),
+                                        //     () {
+                                        //
+                                        //   print(
+                                        //       'Delayed action after 2 seconds');
+                                        //   Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //       builder: (context) =>
+                                        //           CompanyDetail(),
+                                        //     ),
+                                        //   );
+                                        //   // Add your code here that you want to execute after the delay
+                                        // });
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(

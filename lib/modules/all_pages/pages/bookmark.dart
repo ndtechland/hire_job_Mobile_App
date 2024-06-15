@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../constants/static_text.dart';
 import '../../../controllers/home_page_controllerss/home_page_controllerss.dart';
+import '../../../controllers/job_list_by_cat_id_controller/job_detail_by_job_id_controller.dart';
 import '../../../controllers/view_job_controller/saved_job_controller.dart';
 import 'home.dart';
 import 'job_details.dart';
@@ -20,6 +21,8 @@ class Bookmark extends StatelessWidget {
   AllSavedJobController _allsavedJobsController =
       Get.put(AllSavedJobController());
   HomePageController _homePageController = Get.find();
+  JobdetauilsbyJobIdController _jobdetauilsbyJobIdController =
+      Get.put(JobdetauilsbyJobIdController());
 
   ///todo: i can remove anchor tag in flutter...24 may 2024..
 
@@ -185,23 +188,69 @@ class Bookmark extends StatelessWidget {
                                                   GestureDetector(
                                                     onTap: () async {
                                                       isLoading.value = true;
-                                                      SharedPreferences prefs =
-                                                          await SharedPreferences
-                                                              .getInstance();
-                                                      prefs.setString(
-                                                          "JobListId",
-                                                          _allsavedJobsController
-                                                              .foundSavedJobs[
-                                                                  index]
-                                                              .id
-                                                              .toString());
-                                                      print(
-                                                          "sadsad${_allsavedJobsController.foundSavedJobs[index].id.toString()}");
-                                                      await Future.delayed(
-                                                          Duration(seconds: 0));
-                                                      isLoading.value = false;
-                                                      await Get.to(
-                                                          JobDetails());
+
+                                                      try {
+                                                        // SharedPreferences
+                                                        //     prefs =
+                                                        //     await SharedPreferences
+                                                        //         .getInstance();
+
+                                                        // Save JobListId
+                                                        // String jobListId =
+                                                        //     _allJibsController
+                                                        //         .foundJobs[
+                                                        //             index]
+                                                        //         .id
+                                                        //         .toString();
+                                                        // await prefs.setString(
+                                                        //     "JobListId",
+                                                        //     jobListId);
+                                                        // print(
+                                                        //     "JobListId: $jobListId");
+
+                                                        // Save JobTitleid1
+                                                        // String jobTitleid =
+                                                        //     _allJibsController
+                                                        //             .foundJobs[
+                                                        //                 index]
+                                                        //             .jobTitleid ??
+                                                        //         "";
+                                                        // await prefs.setString(
+                                                        //     "JobTitleid1",
+                                                        //     jobTitleid);
+                                                        // print(
+                                                        //     "JobTitleid3: $jobTitleid");
+
+                                                        // await Future.delayed(
+                                                        //     Duration(
+                                                        //         milliseconds:
+                                                        //             200));
+                                                      } catch (e) {
+                                                        print("Error: $e");
+                                                      } finally {
+                                                        isLoading.value = false;
+                                                      }
+
+                                                      await _jobdetauilsbyJobIdController
+                                                          .jobdetailbyjobIdApi(
+                                                        jobListId:
+                                                            _allsavedJobsController
+                                                                .foundSavedJobs![
+                                                                    index]
+                                                                .id
+                                                                .toString(),
+                                                      );
+
+                                                      await _jobdetauilsbyJobIdController
+                                                          .relatedjobListApi(
+                                                        jobTitleid:
+                                                            _allsavedJobsController
+                                                                .foundSavedJobs![
+                                                                    index]
+                                                                .jobTitleid,
+                                                      );
+
+                                                      Get.to(JobDetails());
                                                     },
                                                     child: Container(
                                                       padding:
@@ -215,11 +264,11 @@ class Bookmark extends StatelessWidget {
                                                         clipBehavior: Clip.none,
                                                         child: Image.network(
                                                           FixedText.imgurl +
-                                                              _allsavedJobsController
-                                                                  .foundSavedJobs[
-                                                                      index]
-                                                                  .companyImage
-                                                                  .toString(),
+                                                              (_allsavedJobsController
+                                                                      .foundSavedJobs![
+                                                                          index]
+                                                                      .companyImage ??
+                                                                  ""),
                                                           fit: BoxFit.fill,
                                                           errorBuilder:
                                                               (context, error,
@@ -239,6 +288,65 @@ class Bookmark extends StatelessWidget {
                                                       ),
                                                     ),
                                                   ),
+
+                                                  ///
+                                                  // GestureDetector(
+                                                  //   onTap: () async {
+                                                  //     isLoading.value = true;
+                                                  //     SharedPreferences prefs =
+                                                  //         await SharedPreferences
+                                                  //             .getInstance();
+                                                  //     prefs.setString(
+                                                  //         "JobListId",
+                                                  //         _allsavedJobsController
+                                                  //             .foundSavedJobs[
+                                                  //                 index]
+                                                  //             .id
+                                                  //             .toString());
+                                                  //     print(
+                                                  //         "sadsad${_allsavedJobsController.foundSavedJobs[index].id.toString()}");
+                                                  //     await Future.delayed(
+                                                  //         Duration(seconds: 0));
+                                                  //     isLoading.value = false;
+                                                  //     await Get.to(
+                                                  //         JobDetails());
+                                                  //   },
+                                                  //   child: Container(
+                                                  //     padding:
+                                                  //         const EdgeInsets.only(
+                                                  //             right: 10),
+                                                  //     height: textfieldHeight *
+                                                  //         0.26,
+                                                  //     width:
+                                                  //         textfieldWidth * 0.19,
+                                                  //     child: ClipOval(
+                                                  //       clipBehavior: Clip.none,
+                                                  //       child: Image.network(
+                                                  //         FixedText.imgurl +
+                                                  //             _allsavedJobsController
+                                                  //                 .foundSavedJobs[
+                                                  //                     index]
+                                                  //                 .companyImage
+                                                  //                 .toString(),
+                                                  //         fit: BoxFit.fill,
+                                                  //         errorBuilder:
+                                                  //             (context, error,
+                                                  //                 stackTrace) {
+                                                  //           return ClipOval(
+                                                  //             child:
+                                                  //                 Image.asset(
+                                                  //               'lib/assets/logo/noimageavlble.jpg',
+                                                  //               width: 30,
+                                                  //               height: 30,
+                                                  //               fit: BoxFit
+                                                  //                   .cover,
+                                                  //             ),
+                                                  //           );
+                                                  //         },
+                                                  //       ),
+                                                  //     ),
+                                                  //   ),
+                                                  // ),
                                                   Expanded(
                                                     child: Column(
                                                       crossAxisAlignment:
@@ -282,7 +390,7 @@ class Bookmark extends StatelessWidget {
                                                                 _allsavedJobsController
                                                                     .foundSavedJobs[
                                                                         index]
-                                                                    .id!
+                                                                    .bookmarkid!
                                                                     .toInt()); // Assuming userId is 2
 
                                                             // _homePageController
@@ -321,7 +429,7 @@ class Bookmark extends StatelessWidget {
                                                 padding:
                                                     const EdgeInsets.symmetric(
                                                         vertical: 8),
-                                                child: greyTextSmall(
+                                                child: greyTextSmall4(
                                                   stripHtmlTags(
                                                       _allsavedJobsController
                                                               .foundSavedJobs[

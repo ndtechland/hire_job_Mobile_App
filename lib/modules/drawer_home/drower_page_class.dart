@@ -7,7 +7,7 @@ import 'package:hirejobindia/constants/themes/theme_colors.dart';
 import 'package:hirejobindia/controllers/drower_home_controller/drower_home_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MainAmbrbDrawer extends StatelessWidget {
+class MainnDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     NavController _navcontroller = Get.put(NavController(), permanent: true);

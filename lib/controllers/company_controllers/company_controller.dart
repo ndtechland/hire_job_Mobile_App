@@ -11,13 +11,15 @@ class AllcompanyController extends GetxController {
   final ApiProvider _apiProvider = ApiProvider();
   String searchQuery = "";
 
-  void companyListApi() async {
+  Future<void> companyListApi() async {
     isLoading(true);
     allcpmpanyApiModel = await ApiProvider.AllcompanyApi();
     print('Prince doctor list');
     print(allcpmpanyApiModel);
     if (allcpmpanyApiModel!.response != null) {
       //Get.to(() => TotalPrice());
+
+      //await Get.to(CompanyDetail());
       isLoading(false);
       foundcompany.value = allcpmpanyApiModel!.response!;
       //Get.to(()=>Container());

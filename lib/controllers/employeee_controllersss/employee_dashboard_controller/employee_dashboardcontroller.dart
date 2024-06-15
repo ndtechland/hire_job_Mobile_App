@@ -31,6 +31,7 @@ class HomedashboardController extends GetxController {
       //Get.to(() => TotalPrice());
       isLoading(false);
     }
+    isLoading(false);
   }
 
   @override

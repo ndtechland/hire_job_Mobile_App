@@ -8,6 +8,9 @@ class FixedText {
       "https://admin.hirejobindia.com/TestimonalsImages/";
 
   static const String offaptpdfurl = "https://admin.hirejobindia.com/";
+
+  //https://admin.hirejobindia.com/
+//imgurl
 }
 
 //String imageUrl =

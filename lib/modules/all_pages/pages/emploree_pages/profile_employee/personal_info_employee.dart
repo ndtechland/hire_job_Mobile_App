@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hirejobindia/components/responsive_text.dart';
 import 'package:hirejobindia/components/styles.dart';
-import 'package:hirejobindia/constants/static_text.dart';
 import 'package:hirejobindia/modules/all_pages/pages/view_pdf_only.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
@@ -37,7 +36,8 @@ class PersonalProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String imageUrl =
-        "${FixedText.apiurl2}${_getprofileepersonal.getprofileemployeeModel?.data?.profileImage}";
+        // "${FixedText.apiurl2}$
+        "${_getprofileepersonal.getprofileemployeeModel?.data?.profileImage}";
     print("imageUrl");
     print(imageUrl);
 
@@ -761,7 +761,8 @@ class PersonalProfile extends StatelessWidget {
                               .getprofileemployeeModel?.data?.profileImage !=
                           null
                       ? Image.network(
-                          "${FixedText.apiurl2}${_getprofileepersonal.getprofileemployeeModel?.data?.profileImage}",
+                          //"${FixedText.apiurl2}"
+                          "${_getprofileepersonal.getprofileemployeeModel?.data?.profileImage}",
                           //color: appColor,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {

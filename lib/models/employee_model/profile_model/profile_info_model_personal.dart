@@ -67,6 +67,8 @@ class Data {
   String? panimg;
   String? aadharTwo;
   String? profileImage;
+  num? stateid;
+  num? cityid;
 
   Data({
     this.name,
@@ -86,6 +88,8 @@ class Data {
     this.panimg,
     this.aadharTwo,
     this.profileImage,
+    this.stateid,
+    this.cityid,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -106,6 +110,8 @@ class Data {
         panimg: json["panimg"],
         aadharTwo: json["aadharTwo"],
         profileImage: json["profileImage"],
+        stateid: json["stateid"],
+        cityid: json["cityid"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -126,5 +132,7 @@ class Data {
         "panimg": panimg,
         "aadharTwo": aadharTwo,
         "profileImage": profileImage,
+        "stateid": stateid,
+        "cityid": cityid,
       };
 }

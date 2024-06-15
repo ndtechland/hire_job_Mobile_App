@@ -39,6 +39,7 @@ class AllJobsAppliedApiModel {
 class JobResponseApplied {
   int? id;
   String? jobTitle;
+  String? jobTitleid;
   num? noOfOpening;
   String? location;
   String? requiredExperience;
@@ -57,6 +58,7 @@ class JobResponseApplied {
   JobResponseApplied({
     this.id,
     this.jobTitle,
+    this.jobTitleid,
     this.noOfOpening,
     this.location,
     this.requiredExperience,
@@ -77,6 +79,8 @@ class JobResponseApplied {
       JobResponseApplied(
         id: json["id"],
         jobTitle: json["jobTitle"],
+        jobTitleid: json["jobTitleid"],
+        //jobTitleid
         noOfOpening: json["noOfOpening"],
         location: json["location"],
         requiredExperience: json["requiredExperience"],
@@ -97,6 +101,7 @@ class JobResponseApplied {
   Map<String, dynamic> toJson() => {
         "id": id,
         "jobTitle": jobTitle,
+        "jobTitleid": jobTitleid,
         "noOfOpening": noOfOpening,
         "location": location,
         "requiredExperience": requiredExperience,

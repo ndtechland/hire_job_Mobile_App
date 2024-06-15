@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 const appColor = Color(0xFF6F67FE);
-const appColor2 = Color(0xFFB446FF);
+const appColor2 = Color(0xFF214683
+    // 0xFFB446FF
+    );
 const linkedinColor = Color(0xFF0077B5);
 const logoColor = Color(0xFF214683);
 const logocolorlite = Color(0xff657EA9);
@@ -153,6 +155,21 @@ greyTextSmall3(String val) {
   );
 }
 
+greyTextSmall4(String val) {
+  return Text(
+    val,
+    style: TextStyle(
+      fontSize: 11,
+      color: Colors.black54,
+    ),
+    maxLines: 3,
+    overflow: TextOverflow
+        .ellipsis, // This will add "..." if the text exceeds the maximum lines
+  );
+}
+// greyTextSmall3(stripHtmlTags(
+//testgimonial?.paragraph ?? 'Not Found'))
+
 TextSmallbold(val) {
   return Text(
     val,
@@ -177,6 +194,45 @@ appcolorText(val) {
 }
 
 Container textField2({
+  String? hint,
+  IconData? suffixIcon,
+  TextEditingController? controller,
+  String? Function(String?)? validator,
+  IconData? prefixIcon,
+  FocusNode? focusNode, // Added FocusNode
+}) {
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 10),
+    child: TextFormField(
+      focusNode: focusNode, // Use FocusNode
+      controller: controller,
+      validator: validator,
+      decoration: InputDecoration(
+        labelText: hint,
+        suffixIcon: suffixIcon != null
+            ? Icon(
+                suffixIcon,
+                size: 23,
+                color: Colors.black12,
+              )
+            : null,
+        prefixIcon: prefixIcon != null
+            ? Icon(
+                prefixIcon,
+                size: 23,
+                color: Colors.black54,
+              )
+            : null,
+        labelStyle: const TextStyle(color: Colors.black54, fontSize: 15),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: appColor),
+        ),
+      ),
+    ),
+  );
+}
+
+Container textField3({
   String? hint,
   IconData? suffixIcon,
   TextEditingController? controller,
@@ -293,4 +349,59 @@ textFieldNo(hint) {
       ),
     ),
   );
+}
+
+class PasswordTextField extends StatefulWidget {
+  final String? hint;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final FocusNode? focusNode;
+
+  const PasswordTextField({
+    Key? key,
+    this.hint,
+    this.controller,
+    this.validator,
+    this.focusNode,
+  }) : super(key: key);
+
+  @override
+  _PasswordTextFieldState createState() => _PasswordTextFieldState();
+}
+
+class _PasswordTextFieldState extends State<PasswordTextField> {
+  bool _obscureText = true;
+
+  void _toggleVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: TextFormField(
+        focusNode: widget.focusNode,
+        controller: widget.controller,
+        validator: widget.validator,
+        obscureText: _obscureText,
+        decoration: InputDecoration(
+          labelText: widget.hint,
+          suffixIcon: IconButton(
+            icon: Icon(
+              _obscureText ? Icons.visibility_off : Icons.visibility,
+              color: _obscureText ? Colors.red : Colors.green,
+            ),
+            onPressed: _toggleVisibility,
+          ),
+          labelStyle: const TextStyle(color: Colors.black54, fontSize: 15),
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: appColor),
+          ),
+        ),
+      ),
+    );
+  }
 }

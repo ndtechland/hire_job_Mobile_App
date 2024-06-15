@@ -33,17 +33,20 @@ class CustomElevatedButton extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.green),
+            border: Border.all(color: Colors.white),
             borderRadius: BorderRadius.circular(15),
           ),
           child: Padding(
             padding: const EdgeInsets.all(2.0),
             child: Text(
               text,
+              textAlign: TextAlign.center,
               style: TextStyle(
                   color: textColor,
-                  fontSize: 13.0,
-                  fontWeight: FontWeight.bold),
+                  fontFamily: 'Medium',
+                  fontSize: 12.0,
+                  height: 1.2,
+                  fontWeight: FontWeight.w400),
             ),
           ),
         ),

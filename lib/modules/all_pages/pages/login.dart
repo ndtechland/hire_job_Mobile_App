@@ -11,20 +11,31 @@ import '../../../controllers/employeee_controllersss/employee_login_controllers/
 import '../../../controllers/login_controllers/login_controllersss.dart';
 import '../../../controllers/registrationss/registration_controller.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   static const String id = 'Login';
   Login({Key? key}) : super(key: key);
 
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   final LoginController _loginController = Get.put(LoginController());
+
   final RegistrationController _registrationController =
       Get.put(RegistrationController());
+
   final EmployeeLoginController _employeeloginController =
       Get.put(EmployeeLoginController());
 
-  final FocusNode _userFocusNode = FocusNode(); // FocusNode for User login
-  final FocusNode _employeeFocusNode =
-      FocusNode(); // FocusNode for Employee login
+  final FocusNode _userFocusNode = FocusNode();
+  final FocusNode _userFocusNode2 = FocusNode();
 
+  // FocusNode for User login
+  final FocusNode _employeeFocusNode = FocusNode();
+  final FocusNode _employeeFocusNode2 = FocusNode();
+
+  // FocusNode for Employee login
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -164,9 +175,9 @@ class Login extends StatelessWidget {
                       },
                       focusNode: _userFocusNode, // Assign FocusNode
                     ),
-                    textField2(
+                    PasswordTextField(
                       hint: 'Password',
-                      suffixIcon: Icons.lock,
+                      //suffixIcon: Icons.lock,
                       controller: _loginController.passwordController1,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -174,7 +185,7 @@ class Login extends StatelessWidget {
                         }
                         return null;
                       },
-                      focusNode: _userFocusNode, // Assign FocusNode
+                      focusNode: _userFocusNode2, // Assign FocusNode
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -262,9 +273,9 @@ class Login extends StatelessWidget {
                       },
                       focusNode: _employeeFocusNode, // Assign FocusNode
                     ),
-                    textField2(
+                    PasswordTextField(
                       hint: 'Password',
-                      suffixIcon: Icons.lock,
+                      //suffixIcon: Icons.lock,
                       controller: _employeeloginController.passwordController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -272,7 +283,7 @@ class Login extends StatelessWidget {
                         }
                         return null;
                       },
-                      focusNode: _employeeFocusNode, // Assign FocusNode
+                      focusNode: _employeeFocusNode2, // Assign FocusNode
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,

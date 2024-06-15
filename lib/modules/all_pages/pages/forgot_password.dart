@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hirejobindia/components/styles.dart';
-import 'package:hirejobindia/modules/all_pages/pages/change_password.dart';
 import 'package:hirejobindia/widget/elevated_button.dart';
+
+import 'login.dart';
 
 class ForgotPassword extends StatefulWidget {
   static const String id = 'ForgotPassword';
@@ -55,8 +57,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            appColor,
-            appColor2,
+            logoColor,
+            logoColor,
           ],
         )),
         child: Column(
@@ -98,10 +100,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             ),
             MyElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ChangePassword()));
+                  Get.offAll(Login());
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (context) => Login()));
                 },
                 text: const Icon(Icons.arrow_forward),
                 height: 40,
