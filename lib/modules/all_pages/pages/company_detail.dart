@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+//import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hirejobindia/components/styles.dart';
 import 'package:hirejobindia/widget/elevated_button.dart';
 import 'package:maps_launcher/maps_launcher.dart';
@@ -76,9 +75,9 @@ Future<void> _launchUrlytbee() async {
   }
 }
 
-late GoogleMapController _mapController;
-LatLng _center = LatLng(28.5851, 77.3116); // Default center
-bool _isLoading = true;
+// late GoogleMapController _mapController;
+// LatLng _center = LatLng(28.5851, 77.3116); // Default center
+// bool _isLoading = true;
 
 ///todo: google map api laucher...
 void launchMaps(String address) async {
@@ -120,55 +119,55 @@ class _CompanyDetailState extends State<CompanyDetail> {
 
   final RxBool isLoading = false.obs;
 
-  late GoogleMapController _mapController;
-  LatLng _center = LatLng(28.5851, 77.3116); // Default center
-  bool _isLoading = true;
-  final Set<Marker> _markers = {};
+  // late GoogleMapController _mapController;
+  // LatLng _center = LatLng(28.5851, 77.3116); // Default center
+  // bool _isLoading = true;
+  // final Set<Marker> _markers = {};
   bool _isValidUrl = true;
   late YoutubePlayerController _controller;
 
   @override
   void initState() {
-    _setInitialLocation();
+    // _setInitialLocation();
     // _companyDetailController.companydetailbyIdApi();
     super.initState();
     _initializeYoutubePlayer();
   }
 
-  Future<void> _setInitialLocation() async {
-    String address = _companyDetailController
-            .companydetailbyIdmodel?.response?.companyAddress ??
-        "Not Available";
-    LatLng coordinates = await _getCoordinates(address);
-    setState(() {
-      _center = coordinates;
-      _markers.add(Marker(
-        markerId: MarkerId('companyAddress'),
-        position: coordinates,
-        infoWindow: InfoWindow(
-          title: 'Company Address',
-          snippet: address,
-        ),
-      ));
-      _isLoading = false;
-    });
-  }
-
-  Future<LatLng> _getCoordinates(String address) async {
-    try {
-      List<Location> locations = await locationFromAddress(address);
-      if (locations.isNotEmpty) {
-        return LatLng(locations.first.latitude, locations.first.longitude);
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-    return LatLng(28.5851, 77.3116); // Default coordinates if geocoding fails
-  }
-
-  void _onMapCreated(GoogleMapController controller) {
-    _mapController = controller;
-  }
+  // Future<void> _setInitialLocation() async {
+  //   String address = _companyDetailController
+  //           .companydetailbyIdmodel?.response?.companyAddress ??
+  //       "Not Available";
+  //   LatLng coordinates = await _getCoordinates(address);
+  //   setState(() {
+  //     _center = coordinates;
+  //     _markers.add(Marker(
+  //       markerId: MarkerId('companyAddress'),
+  //       position: coordinates,
+  //       infoWindow: InfoWindow(
+  //         title: 'Company Address',
+  //         snippet: address,
+  //       ),
+  //     ));
+  //     _isLoading = false;
+  //   });
+  // }
+  //
+  // Future<LatLng> _getCoordinates(String address) async {
+  //   try {
+  //     List<Location> locations = await locationFromAddress(address);
+  //     if (locations.isNotEmpty) {
+  //       return LatLng(locations.first.latitude, locations.first.longitude);
+  //     }
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  //   return LatLng(28.5851, 77.3116); // Default coordinates if geocoding fails
+  // }
+  //
+  // void _onMapCreated(GoogleMapController controller) {
+  //   _mapController = controller;
+  // }
 
   void _initializeYoutubePlayer() {
     String videoUrl =
@@ -1222,18 +1221,18 @@ class _CompanyDetailState extends State<CompanyDetail> {
 
 }
 
-Future<LatLng> _getCoordinates(String address) async {
-  try {
-    List<Location> locations = await locationFromAddress(address);
-    if (locations.isNotEmpty) {
-      return LatLng(locations.first.latitude, locations.first.longitude);
-    }
-  } catch (e) {
-    print('Error: $e');
-  }
-  return LatLng(28.5851, 77.3116); // Default coordinates if geocoding fails
-}
-
-void _onMapCreated(GoogleMapController controller) {
-  _mapController = controller;
-}
+// Future<LatLng> _getCoordinates(String address) async {
+//   try {
+//     List<Location> locations = await locationFromAddress(address);
+//     if (locations.isNotEmpty) {
+//       return LatLng(locations.first.latitude, locations.first.longitude);
+//     }
+//   } catch (e) {
+//     print('Error: $e');
+//   }
+//   return LatLng(28.5851, 77.3116); // Default coordinates if geocoding fails
+// }
+//
+// void _onMapCreated(GoogleMapController controller) {
+//   _mapController = controller;
+// }
